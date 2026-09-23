@@ -8,6 +8,25 @@ nur Dateien, die GitHub Pages kostenlos ausliefert.
 Funktionsumfang wie unit.link: Profil, Schnellkontakt, gruppierte Links,
 „Kontakt speichern" als `.vcf`, Teilen, QR-Code.
 
+## Zwei Kartentypen
+
+| Typ | Ordner | Wofür |
+|---|---|---|
+| Visitenkarte | `k/<name>/` | Kontaktdaten einer Person, „Kontakt speichern" |
+| Bewertungskarte | `b/<betrieb>/` | liegt an der Theke, ein Tipp führt ins Bewertungsformular |
+
+Beide sehen gleich aus, beide laufen über dieselbe Technik. Neue
+Bewertungskarte anlegen:
+
+```bash
+python3 tools/neue-bewertungskarte.py "Salon Nord" --google "https://g.page/r/XXXX/review"
+```
+
+Den Link holst du im Google-Unternehmensprofil des Betriebs unter
+*Rezension schreiben → Link kopieren*. Der Chip zeigt auf deine Seite, nicht
+direkt auf Google — so lässt sich das Ziel später ändern, ohne die Karten
+beim Kunden einzusammeln.
+
 ## Ordner
 
 ```

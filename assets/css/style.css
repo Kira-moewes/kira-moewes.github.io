@@ -190,13 +190,22 @@ h1{
   max-width:36ch;
 }
 
+/* ---------- Bewertungskarte ---------- */
+.sterne{display:flex;justify-content:center;gap:7px;margin:20px 0 0}
+.stern{width:19px;height:19px;fill:var(--ember);stroke:none}
+.frage{
+  margin:20px 0 0;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--sand-dim);font-weight:400;
+}
+.weitere{list-style:none;margin:26px 0 0;padding:0;border-top:1px solid var(--line)}
+
 /* ---------- Aktionen ---------- */
 .actions{margin:38px 0 0;padding-top:30px;border-top:1px solid var(--line-strong)}
 .btn{
   display:flex;align-items:center;justify-content:center;gap:10px;
   width:100%;padding:16px 18px;border-radius:var(--r);
   font:inherit;font-size:.78rem;font-weight:400;letter-spacing:.2em;text-transform:uppercase;
-  cursor:pointer;border:1px solid transparent;background:none;
+  cursor:pointer;border:1px solid transparent;background:none;text-decoration:none;
   transition:background .2s ease,color .2s ease,border-color .2s ease;
   -webkit-tap-highlight-color:transparent;
 }

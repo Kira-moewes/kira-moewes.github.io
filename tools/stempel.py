@@ -15,7 +15,7 @@ STEMPEL = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M")
 MUSTER = re.compile(r'(\b(?:src|href)="[^"]+?\.(?:js|css))(?:\?v=[^"]*)?"')
 
 geaendert = []
-for datei in list(ROOT.glob("k/*/index.html")) + [ROOT / "editor/index.html", ROOT / "404.html"]:
+for datei in list(ROOT.glob("k/*/index.html")) + list(ROOT.glob("b/*/index.html")) + [ROOT / "editor/index.html", ROOT / "404.html"]:
     if not datei.exists():
         continue
     alt = datei.read_text(encoding="utf-8")

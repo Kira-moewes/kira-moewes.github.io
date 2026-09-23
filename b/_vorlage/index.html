@@ -3,18 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kontakt</title>
-<meta name="description" content="Digitale Visitenkarte">
-<meta name="theme-color" content="#0A0705">
-<meta property="og:type" content="profile">
-<meta property="og:title" content="Kontakt">
-<meta property="og:description" content="Digitale Visitenkarte">
-<meta name="twitter:card" content="summary">
+<title>Bewertung</title>
+<meta name="description" content="Bewertung abgeben">
+<meta name="theme-color" content="#0B0908">
 <link rel="icon" href="../../assets/img/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="../../assets/img/apple-touch-icon.png">
 <link rel="stylesheet" href="../../assets/css/style.css?v=20260923-0903">
 </head>
 <body>
+
 <div class="scene" aria-hidden="true">
   <div class="sun"></div>
   <div class="haze"></div>
@@ -31,13 +28,10 @@
       </linearGradient>
       <filter id="soft" x="-20%" y="-60%" width="140%" height="260%"><feGaussianBlur stdDeviation="3"/></filter>
       <radialGradient id="disc" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="var(--ember-hi)"/>
-        <stop offset="70%" stop-color="var(--ember)"/>
-        <stop offset="100%" stop-color="var(--ember-lo)"/>
+        <stop offset="0%" stop-color="var(--ember-hi)"/><stop offset="70%" stop-color="var(--ember)"/><stop offset="100%" stop-color="var(--ember-lo)"/>
       </radialGradient>
       <radialGradient id="halo" cx="50%" cy="50%" r="50%">
-        <stop offset="55%" stop-color="var(--ember)" stop-opacity=".22"/>
-        <stop offset="100%" stop-color="var(--ember)" stop-opacity="0"/>
+        <stop offset="55%" stop-color="var(--ember)" stop-opacity=".22"/><stop offset="100%" stop-color="var(--ember)" stop-opacity="0"/>
       </radialGradient>
     </defs>
     <circle class="halo" cx="740" cy="600" r="260" fill="url(#halo)"/>
@@ -52,55 +46,27 @@
   <div class="grain"></div>
 </div>
 
-<div class="brandbar" id="brandbar">
+<div class="brandbar">
   <img id="logo" class="brandmark" alt="" src="">
 </div>
 
-<main class="card" id="card" hidden>
+<main class="card" id="karte" hidden>
   <header class="hero">
-    <img id="photo" class="photo" alt="" hidden>
     <h1 id="name"></h1>
-    <p class="role" id="role"></p>
-    <p class="bio" id="bio"></p>
+    <div class="sterne" id="sterne" aria-hidden="true"></div>
+    <p class="frage" id="frage"></p>
+    <p class="bio" id="dank"></p>
   </header>
 
-  <section class="actions" aria-label="Schnellaktionen">
-    <button class="btn btn-primary" id="saveContact" type="button">
-      <svg viewBox="0 0 24 24" class="i"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>
-      Kontakt speichern
-    </button>
-  </section>
-
-  <section class="groups" id="groups" aria-label="Links"></section>
-
-  <section class="share" aria-label="Teilen">
-    <button class="btn btn-ghost" id="shareBtn" type="button">
-      <svg viewBox="0 0 24 24" class="i"><path d="M12 16V4m0 0L8 8m4-4 4 4M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
-      Teilen
-    </button>
-    <button class="btn btn-ghost" id="qrBtn" type="button">
-      <svg viewBox="0 0 24 24" class="i"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/></svg>
-      QR-Code
-    </button>
-  </section>
+  <section class="actions" id="aktionen"></section>
 
   <footer class="foot">
-    <nav id="footLinks"></nav>
     <p class="sig" id="sig">Digitale Visitenkarte</p>
   </footer>
 </main>
 
-<dialog class="qr" id="qrModal" aria-label="QR-Code dieser Karte">
-  <div class="qr-box"><div id="qrCanvas"></div></div>
-  <p class="qr-url" id="qrUrl"></p>
-  <button class="btn btn-ghost" id="qrClose" type="button">Schließen</button>
-</dialog>
-
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
 <script src="../../assets/js/brand.js?v=20260923-0903"></script>
-<script src="profil.js?v=20260923-0903"></script>
-<script src="../../assets/js/vendor/qrcode.min.js?v=20260923-0903"></script>
-<script src="../../assets/js/app.js?v=20260923-0903"></script>
+<script src="bewertung-daten.js?v=20260923-0903"></script>
+<script src="../../assets/js/bewertung.js?v=20260923-0903"></script>
 </body>
 </html>
