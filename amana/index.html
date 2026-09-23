@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Amana — Digitale Visitenkarten und Bewertungskarten</title>
+<meta name="description" content="NFC-Karten mit eigener Seite: Kontaktdaten speichern oder bewerten, ohne App und ohne Abtippen.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..700&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --void:#0A0503; --ember:#150B06; --char:#241108; --line:#32180C;
+    --rust:#9F3C12; --flare:#D95F1E; --gold:#F68A0A; --halo:#FFC46B;
+    --text:#E8DDD2; --muted:#9A8578; --faint:#6B584C;
+
+    --wrap:1200px;
+    --pad:clamp(1.25rem,4vw,3rem);
+    --nav-h:64px;
+    --ease:cubic-bezier(.22,1,.36,1);
+
+    --display:'Archivo','Helvetica Neue',system-ui,sans-serif;
+    --body:'Instrument Sans','Segoe UI',system-ui,sans-serif;
+    --mono:'JetBrains Mono','Consolas',ui-monospace,monospace;
+    --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--void);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad)}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin:0}
+
+  #progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;background:linear-gradient(90deg,var(--rust),var(--gold),var(--halo));transition:width .08s linear}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);background:linear-gradient(180deg,rgba(10,5,3,.9),rgba(10,5,3,0));animation:page-in .9s var(--ease) both}
+  nav .mark{font-family:var(--display);font-stretch:125%;font-weight:500;font-size:13px;letter-spacing:.5em;text-transform:uppercase;color:var(--text);text-decoration:none}
+  nav ul{display:flex;gap:clamp(14px,2.6vw,32px);list-style:none;margin:0;padding:0}
+  nav a.nl{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;position:relative;padding-bottom:4px;transition:color .3s var(--ease)}
+  nav a.nl::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .4s var(--ease)}
+  nav a.nl:hover,nav a.nl:focus-visible{color:var(--halo)}
+  nav a.nl:hover::after,nav a.nl:focus-visible::after{transform:scaleX(1);transform-origin:left}
+  @media (max-width:680px){nav ul{display:none}}
+
+  /* ================= HERO mit Kugel ================= */
+  .hero{position:relative;height:190vh}
+  .hero-sticky{
+    position:sticky;top:0;height:100svh;min-height:560px;
+    display:flex;flex-direction:column;justify-content:center;
+    overflow:hidden;isolation:isolate;
+    background:
+      radial-gradient(60vw 50vw at 50% 34%, rgba(246,138,10,.16), transparent 64%),
+      linear-gradient(200deg,#140D0B 0%,#1C1310 52%,#0A0503 100%);
+  }
+  .hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+
+  /* Dünenkante als Boden unter der Kugel */
+  .dune,.dune-ridge{position:absolute;z-index:2;width:220%;height:150%;left:-60%;top:74%;border-radius:56% 44% 0 0 / 46% 40% 0 0;transform:rotate(-4deg);pointer-events:none}
+  .dune{background:linear-gradient(168deg,#B94F1B 0%,#8E3510 40%,#4A1F0C 74%,#1A0B04 100%)}
+  .dune-ridge{box-shadow:inset 0 2px 0 0 rgba(255,196,107,.45)}
+
+  .hud{position:absolute;z-index:4;font-family:var(--mono);font-size:10px;line-height:1.7;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0}
+  .hud-tl{top:calc(var(--nav-h) + 18px);left:var(--pad)}
+  .hud-tr{top:calc(var(--nav-h) + 18px);right:var(--pad);text-align:right}
+  .hud-bl{bottom:22px;left:var(--pad)}
+  .hud-br{bottom:22px;right:var(--pad);text-align:right}
+  @media (max-width:820px){.hud-tl,.hud-tr{display:none}}
+
+  .hero .wrap{position:relative;z-index:5;text-align:center;padding-top:calc(var(--nav-h) + 1.5rem)}
+  .hero-stagger{transform:translateY(calc(var(--hp,0) * -14vh));opacity:calc(1 - var(--hp,0) * 1.4)}
+  .hud{opacity:calc(1 - var(--hp,0) * 2.5)}
+
+  .hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin:0 0 clamp(1.4rem,3vw,2.4rem)}
+  .hero-title{
+    font-family:var(--display);font-stretch:125%;font-weight:300;
+    font-size:clamp(2.2rem,6.2vw,5.2rem);line-height:1.06;letter-spacing:.13em;
+    text-transform:uppercase;text-wrap:balance;max-width:17ch;margin:0 auto;
+  }
+  .hero-title .line{display:block;overflow:hidden}
+  .hero-title .line-in{display:inline-block;transform:translateY(112%);animation:line-rise 1.05s var(--ease) forwards}
+  .hero-title .line:nth-child(2) .line-in{animation-delay:.09s}
+  .hero-title .line:nth-child(3) .line-in{animation-delay:.18s}
+  .hero-title .em{color:var(--halo)}
+  @keyframes line-rise{to{transform:none}}
+
+  .hero-sub{margin:clamp(1.4rem,3vw,2.2rem) auto 0;max-width:46rem;font-family:var(--mono);font-size:12.5px;line-height:1.95;letter-spacing:.02em;color:var(--muted);animation:page-in 1s var(--ease) .5s both}
+  .hero-cta{margin-top:clamp(2.2rem,5vw,3.4rem);display:flex;justify-content:center;gap:14px;flex-wrap:wrap;animation:page-in 1s var(--ease) .5s both}
+
+  .btn{display:inline-flex;align-items:center;gap:.75em;padding:.95em 1.7em;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;position:relative;overflow:hidden;transition:color .4s var(--ease),border-color .4s var(--ease)}
+  .btn span{position:relative;z-index:1}
+  .btn::before{content:"";position:absolute;inset:0;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+  .btn:hover::before,.btn:focus-visible::before{transform:scaleX(1)}
+  .btn-solid{color:var(--text);border:1px solid var(--rust)}
+  .btn-solid::before{background:var(--rust)}
+  .btn-solid:hover,.btn-solid:focus-visible{color:#FFF3E2;border-color:var(--gold)}
+  .btn-ghost{color:var(--muted);border:1px solid var(--line)}
+  .btn-ghost::before{background:rgba(217,95,30,.16)}
+  .btn-ghost:hover,.btn-ghost:focus-visible{color:var(--halo);border-color:var(--rust)}
+
+  .hero-grain{position:absolute;inset:0;z-index:6;pointer-events:none;background-image:var(--grain);opacity:.24;mix-blend-mode:soft-light}
+
+  @keyframes page-in{from{opacity:0;transform:translateY(14px)}}
+
+  /* ================= Abschnitte ================= */
+  section.band{padding:clamp(72px,10vw,128px) 0;border-top:1px solid var(--char);background:var(--void);position:relative;z-index:10}
+  .sec-head{margin-bottom:26px}
+  .lead{max-width:22ch;font-family:var(--display);font-stretch:118%;font-weight:300;font-size:clamp(24px,4.6vw,44px);letter-spacing:.09em;text-transform:uppercase;line-height:1.1;margin:0 0 24px;text-wrap:balance;color:var(--text)}
+  .intro-text{max-width:62ch;color:var(--muted);font-size:17px;margin:0 0 14px}
+
+  .services{border-top:1px solid var(--line);margin-top:18px}
+  .svc{border:0;border-bottom:1px solid var(--line);width:100%;text-align:left;background:transparent;color:inherit;font:inherit;cursor:pointer;display:block;padding:0;position:relative;overflow:hidden}
+  .svc::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,rgba(217,95,30,.16),rgba(217,95,30,0) 62%);transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease)}
+  .svc:hover::before,.svc:focus-visible::before,.svc[aria-expanded="true"]::before{transform:scaleX(1)}
+  .svc-row{position:relative;z-index:1;display:flex;align-items:baseline;gap:20px;padding:26px clamp(6px,1.6vw,18px)}
+  .svc-row .idx{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.1em;flex:0 0 auto;transition:color .4s var(--ease)}
+  .svc-row .name{font-family:var(--display);font-stretch:125%;font-weight:400;text-transform:uppercase;letter-spacing:.14em;font-size:clamp(17px,3vw,30px);margin:0;flex:1;transition:transform .5s var(--ease),color .4s var(--ease)}
+  .svc-row .plus{font-family:var(--mono);font-size:15px;color:var(--faint);transition:transform .45s var(--ease),color .4s var(--ease);flex:0 0 auto}
+  .svc:hover .name,.svc:focus-visible .name,.svc[aria-expanded="true"] .name{transform:translateX(12px);color:var(--halo)}
+  .svc:hover .idx,.svc[aria-expanded="true"] .idx{color:var(--gold)}
+  .svc[aria-expanded="true"] .plus{transform:rotate(45deg);color:var(--gold)}
+  .svc-body{position:relative;z-index:1;max-height:0;overflow:hidden;transition:max-height .55s var(--ease)}
+  .svc-body p{margin:0;padding:0 clamp(6px,1.6vw,18px) 30px 52px;max-width:64ch;color:var(--muted);font-size:15.5px}
+  .svc[aria-expanded="true"] .svc-body{max-height:320px}
+  @media (max-width:560px){.svc-body p{padding-left:clamp(6px,1.6vw,18px)}}
+
+  /* Immer dabei */
+  .always{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2px;background:var(--line);border:1px solid var(--line);margin:6px 0 42px}
+  .always div{background:var(--ember);padding:22px 22px 26px}
+  .always h4{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
+  .always p{margin:0;color:var(--muted);font-size:14.5px}
+
+  /* Pakete */
+  .packs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line);border:1px solid var(--line)}
+  @media (max-width:900px){.packs{grid-template-columns:1fr}}
+  .pack{background:var(--ember);padding:30px 24px 34px;display:flex;flex-direction:column;position:relative}
+  .pack.mid{background:#1C0F08}
+  .pack.draft{background:#130A05}
+  .pack::after{content:"";position:absolute;left:0;top:0;height:2px;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
+  .pack.seen::after{transform:scaleX(1)}
+  .pack.mid::after,.pack.mid.seen::after{transform:scaleX(1)}
+  .pack .tier{font-family:var(--display);font-stretch:125%;font-weight:500;font-size:34px;letter-spacing:.16em;color:var(--halo);margin:0;line-height:1}
+  .pack .tier-name{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:10px 0 0}
+  .pack .tier-for{margin:16px 0 0;color:var(--muted);font-size:14.5px;min-height:3.2em}
+  .pack .flag{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);border:1px solid var(--rust);padding:3px 7px}
+  .pack ul{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:13px;border-top:1px solid var(--line);padding-top:20px}
+  .pack li{font-size:14px;line-height:1.6;color:var(--muted);padding-left:19px;position:relative}
+  .pack li::before{content:"+";position:absolute;left:0;top:-1px;color:var(--rust);font-family:var(--mono);font-size:13px}
+  .pack li.inherit{color:var(--text)}
+  .pack li.inherit::before{content:"↑";color:var(--gold)}
+  .pack li b{color:var(--text);font-weight:500}
+
+  /* Nie dabei */
+  .never{margin-top:44px;border-top:1px solid var(--line)}
+  .never-row{display:grid;grid-template-columns:auto 1fr;gap:clamp(16px,3vw,36px);padding:26px clamp(4px,1.4vw,14px);border-bottom:1px solid var(--line)}
+  .never-row .ni{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--faint);padding-top:3px}
+  .never-row h4{font-family:var(--display);font-stretch:120%;font-weight:400;font-size:15px;letter-spacing:.15em;text-transform:uppercase;margin:0 0 8px;color:var(--text)}
+  .never-row p{margin:0;color:var(--muted);font-size:14.5px;max-width:62ch}
+  @media (max-width:620px){.never-row{grid-template-columns:1fr;gap:8px}}
+
+  .grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2px;background:var(--line);border:1px solid var(--line);margin-top:18px}
+  .cell{background:var(--ember);padding:26px 22px 30px;position:relative;transition:background .5s var(--ease)}
+  .cell:hover{background:#1E0F08}
+  .cell .n{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.14em;display:block;margin-bottom:14px}
+  .cell h3{font-family:var(--display);font-stretch:120%;font-weight:400;font-size:14.5px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px}
+  .cell p{margin:0;color:var(--muted);font-size:14px}
+  .cell .out{display:block;margin-top:12px;color:var(--text);font-size:13.5px}
+  .cell .out b{color:var(--halo);font-weight:500}
+  .cell::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease)}
+  .cell:hover::after{transform:scaleX(1)}
+
+  .name-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,6vw,72px);align-items:start}
+  @media (max-width:820px){.name-grid{grid-template-columns:1fr}}
+  .arabic{font-size:clamp(56px,11vw,124px);color:var(--rust);line-height:.9;margin:0;direction:rtl}
+  .translit{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--faint);margin:18px 0 0}
+  .name-grid p.body{color:var(--muted);margin:0 0 16px;max-width:56ch;font-size:16px}
+  .name-grid p.body strong{color:var(--text);font-weight:500}
+
+  .cta-band h2{font-family:var(--display);font-stretch:125%;font-weight:300;font-size:clamp(26px,5.6vw,60px);letter-spacing:.13em;text-transform:uppercase;margin:0 0 26px;text-wrap:balance;color:var(--text)}
+  .rows{margin-top:46px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:28px}
+  .rows div p:first-child{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin:0 0 8px}
+  .rows div p:last-child{margin:0;color:var(--muted);font-size:14.5px}
+
+  footer{border-top:1px solid var(--char);padding:32px 0 60px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;background:var(--void);position:relative;z-index:10}
+  footer p{margin:0;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  footer a{color:var(--faint);text-decoration:none;transition:color .3s var(--ease)}
+  footer a:hover{color:var(--halo)}
+
+  .rise{transform:translateY(16px);transition:transform .8s var(--ease)}
+  .rise.seen{transform:none}
+
+  a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rise{transform:none}.hero-title .line-in{transform:none}.hero{height:auto}.hero-sticky{position:relative}}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <a class="mark" href="#top">Amana</a>
+  <ul>
+    <li><a class="nl" href="#bekommen">Karten</a></li>
+    <li><a class="nl" href="#leistungen">Pflege</a></li>
+    <li><a class="nl" href="#arbeitsprobe">Arbeitsprobe</a></li>
+    <li><a class="nl" href="#qualitaet">Qualität</a></li>
+    <li><a class="nl" href="#prozess">Prozess</a></li>
+    <li><a class="nl" href="#name">Der Name</a></li>
+    <li><a class="nl" href="#kontakt">Kontakt</a></li>
+  </ul>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-sticky">
+    <canvas class="hero-canvas" id="crystal" aria-hidden="true"></canvas>
+    <div class="dune" aria-hidden="true"></div>
+    <div class="dune-ridge" aria-hidden="true"></div>
+
+    <p class="hud hud-tl" aria-hidden="true">NFC-Karten /<br>Amana</p>
+    <p class="hud hud-tr" aria-hidden="true">أمانة<br>Das Anvertraute</p>
+
+    <div class="wrap">
+      <h1 class="hero-title">
+        <span class="line"><span class="line-in">Eine Karte,</span></span>
+        <span class="line"><span class="line-in">ein <span class="em">Tipp</span>,</span></span>
+        <span class="line"><span class="line-in">gespeichert.</span></span>
+      </h1>
+      <p class="hero-sub">Handy an die Karte halten, die Seite öffnet sich. Kontakt speichern oder bewerten — ohne App, ohne Abtippen. Kein NFC am Gerät? Dann der QR-Code auf der Rückseite.</p>
+      <div class="hero-cta">
+        <a class="btn btn-solid" href="#kontakt"><span>Karte anfragen</span><span aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href="#arbeitsprobe"><span>Karte ausprobieren</span></a>
+      </div>
+    </div>
+
+    <p class="hud hud-bl" aria-hidden="true">Eine Ansprechpartnerin<br>Von den Daten bis zur fertigen Karte</p>
+    <p class="hud hud-br" aria-hidden="true">Index 00 / 06<br>© 2026</p>
+    <div class="hero-grain"></div>
+  </div>
+</header>
+
+<main>
+
+  <section class="band" id="bekommen">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">01 / Karten</span></div>
+      <p class="lead">Zwei Karten, ein System</p>
+
+      <div class="grid4" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+        <div class="cell rise">
+          <span class="n">Karte 01</span>
+          <h3>Digitale Visitenkarte</h3>
+          <p>Für Selbstständige, Vertrieb, Außendienst und Handwerksbetriebe mit Kundenkontakt. Der Empfänger hält sein Handy an die Karte und sieht Name, Position, Firma, Telefon, E-Mail und Website. Ein Tipp auf „Kontakt speichern“, und alles steht im Adressbuch — richtig geschrieben, ohne Vertipper.</p>
+          <span class="out"><b>Ansehen:</b> <a href="https://kira-moewes.github.io/k/kira/" target="_blank" rel="noopener" style="color:var(--halo)">Beispielkarte öffnen</a></span>
+        </div>
+        <div class="cell rise">
+          <span class="n">Karte 02</span>
+          <h3>Bewertungskarte</h3>
+          <p>Für Friseure, Restaurants, Werkstätten, Physiotherapie und Kosmetik — überall dort, wo Gäste kommen und wieder gehen. Die Karte liegt an der Theke. Der Gast hält sein Handy dran und landet mit einem Tipp im Google-Bewertungsformular, nicht in der Suche.</p>
+          <span class="out"><b>Ansehen:</b> <a href="https://kira-moewes.github.io/b/demo-friseur/" target="_blank" rel="noopener" style="color:var(--halo)">Beispielkarte öffnen</a></span>
+        </div>
+      </div>
+
+      <p class="lead" style="margin-top:64px">Was immer dabei ist</p>
+
+      <div class="always">
+        <div><p>Die Karte mit Chip, von mir beschrieben und auf zwei Geräten getestet.</p></div>
+        <div><p>Eine eigene Seite je Karte im einheitlichen Design. Kontaktdaten und Links trage ich ein.</p></div>
+        <div><p>Die Seite lädt nichts von fremden Servern, setzt keine Cookies und verfolgt niemanden.</p></div>
+      </div>
+
+      <p class="lead" style="margin-top:64px">Preise</p>
+      <p class="intro-text">Einmal zahlen, dann nie wieder. Kein Abo, keine monatliche Gebühr. Änderungen sind im Preis nicht enthalten: Ändern sich Ihre Angaben später, kostet jede Änderung 15 € — die Karte selbst bleibt unverändert, geändert wird die Seite dahinter.</p>
+
+      <div class="packs">
+        <div class="pack rise">
+          <p class="tier">49 €</p>
+          <p class="tier-name">Einzelne Karte</p>
+          <p class="tier-for">Für alle, die nach dem ersten Treffen im Adressbuch stehen wollen — nicht auf einem Zettel im Auto.</p>
+          <ul>
+            <li><b>Karte, Seite und QR-Datei</b> — fertig eingerichtet und getestet.</li>
+            <li>Ihre Daten trage ich nach Ihren Angaben ein.</li>
+            <li>Sie bekommen den Link zur Freigabe, bevor der Chip beschrieben wird.</li>
+          </ul>
+        </div>
+
+        <div class="pack mid rise">
+          <p class="tier">39 €</p>
+          <p class="tier-name">Ab fünf Karten</p>
+          <p class="tier-for">Für kleine Teams, die einheitlich auftreten wollen.</p>
+          <ul>
+            <li class="inherit">Alle Leistungen der Einzelkarte</li>
+            <li><b>Einheitliches Design</b> über alle Karten des Teams.</li>
+            <li>Eine Ansprechperson für alle Karten, eine Rechnung.</li>
+          </ul>
+        </div>
+
+        <div class="pack draft rise">
+          <p class="tier">32 €</p>
+          <p class="tier-name">Ab zwanzig Karten</p>
+          <p class="tier-for">Für Betriebe, die das ganze Team ausstatten — und jeden neuen Mitarbeiter am ersten Tag gleich mit.</p>
+          <ul>
+            <li class="inherit">Alle Leistungen der Einzelkarte</li>
+            <li><b>Nachbestellung zum selben Preis.</b></li>
+            <li>Neue Mitarbeiter bekommen ihre Karte zum Eintritt.</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="lead" style="margin-top:64px">Das ist nie dabei</p>
+
+      <div class="never">
+        <div class="never-row rise">
+          <span class="ni">01</span>
+          <div>
+            <h4>Impressum und Datenschutzerklärung</h4>
+            <p>Ich verlinke Ihre vorhandenen Seiten in der Fußzeile Ihrer Karte. Geschrieben oder rechtlich geprüft werden sie von mir nicht. <b>Ich bin keine Rechtsberatung und darf keine sein.</b></p>
+          </div>
+        </div>
+        <div class="never-row rise">
+          <span class="ni">02</span>
+          <div>
+            <h4>Keine Vorab-Abfrage bei der Bewertungskarte</h4>
+            <p>Manche Anbieter fragen erst „Waren Sie zufrieden?“ und leiten nur die Zufriedenen zu Google. Das verstößt gegen Googles Richtlinien und kann Ihr Profil kosten. Bei mir führt die Karte alle zum selben Formular.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="leistungen">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">02 / Pflege</span></div>
+      <p class="lead">Ihre Karte veraltet nicht</p>
+      <p class="intro-text">Eine gedruckte Visitenkarte ist Altpapier, sobald sich eine Nummer ändert. Hier bleibt die Karte, wie sie ist — geändert wird die Seite dahinter, und zwar von mir.</p>
+
+      <div class="services">
+        <button class="svc" aria-expanded="false">
+          <span class="svc-row"><span class="idx">01</span><span class="name">Änderungen</span><span class="plus">+</span></span>
+          <span class="svc-body"><p>Neue Nummer, neue Firma, anderer Link: Sie schreiben mir, ich ändere es. Jede Änderung kostet 15 € und ist sofort auf jeder Karte sichtbar.</p></span>
+        </button>
+        <button class="svc" aria-expanded="false">
+          <span class="svc-row"><span class="idx">02</span><span class="name">Wenn die Karte verloren geht</span><span class="plus">+</span></span>
+          <span class="svc-body"><p>Eine Ersatzkarte kostet den Kartenpreis, Ihre Seite bleibt bestehen und behält ihre Adresse. Wer die verlorene Karte findet, sieht dieselben Angaben, die auch auf einer gedruckten Visitenkarte gestanden hätten — mehr ist dort nicht gespeichert.</p></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="arbeitsprobe">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">03 / Arbeitsprobe</span></div>
+      <p class="lead">Probieren Sie es am Handy</p>
+      <p class="intro-text">Zwei echte Karten, wie sie ein Kunde bekommt. Öffnen Sie die Links am besten mit dem Telefon — dann funktioniert auch das Speichern ins Adressbuch.</p>
+
+      <div class="hero-cta" style="justify-content:flex-start;margin-top:6px">
+        <a class="btn btn-solid" href="https://kira-moewes.github.io/k/kira/" target="_blank" rel="noopener"><span>Visitenkarte ansehen</span><span aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href="https://kira-moewes.github.io/b/demo-friseur/" target="_blank" rel="noopener"><span>Bewertungskarte ansehen</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="qualitaet">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">04 / Qualität</span></div>
+      <p class="lead">Prüfen Sie es selbst nach</p>
+
+      <div class="grid4">
+        <div class="cell rise"><span class="n">Punkt 01</span><h3>Ladezeit</h3><p>Die Seite ist da, bevor Sie zu scrollen anfangen. Keine fremden Skripte, keine schweren Bilddateien.</p></div>
+        <div class="cell rise"><span class="n">Punkt 02</span><h3>Auf dem Handy</h3><p>Drehen Sie das Gerät — alles bleibt lesbar.</p></div>
+        <div class="cell rise"><span class="n">Punkt 03</span><h3>Kontakt speichern</h3><p>Ein Klick, und Ihre Kontaktdaten stehen im Adressbuch Ihres Kunden.</p></div>
+        <div class="cell rise"><span class="n">Punkt 04</span><h3>Keine fremden Verbindungen</h3><p>Die Seite ruft keinen fremden Server auf. Nichts wird nachgeladen, nichts mitgeschrieben.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="prozess">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">05 / Prozess</span></div>
+      <p class="lead">Vier Schritte bis zur fertigen Karte</p>
+      <p class="intro-text">Von der ersten Nachricht bis zur Karte in Ihrer Hand vergehen in der Regel wenige Tage.</p>
+
+      <div class="grid4">
+        <div class="cell rise"><span class="n">Schritt 01</span><h3>Daten sammeln</h3><p>Ein kurzes Formular oder ein Telefonat: Name, Position, Nummer, E-Mail, Links, gewünschte Seitenadresse.</p><span class="out"><b>Sie bekommen:</b> die Zusammenfassung Ihrer Angaben.</span></div>
+        <div class="cell rise"><span class="n">Schritt 02</span><h3>Seite bauen</h3><p>Ich lege Ihre Seite an und schicke Ihnen den Link. Sie sehen genau das, was Ihre Kunden später sehen.</p><span class="out"><b>Sie bekommen:</b> den Link zur Freigabe.</span></div>
+        <div class="cell rise"><span class="n">Schritt 03</span><h3>Karte bespielen</h3><p>Erst nach Ihrer Freigabe beschreibe ich den Chip. Getestet wird mit zwei Geräten, iPhone und Android.</p><span class="out"><b>Sie bekommen:</b> die beschriebene Karte.</span></div>
+        <div class="cell rise"><span class="n">Schritt 04</span><h3>Übergabe</h3><p>Karte, QR-Datei für den Druck und eine kurze Einweisung: wie man sie hinhält, was bei Handys ohne NFC passiert.</p><span class="out"><b>Sie bekommen:</b> Karte, QR-Datei, Anleitung.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="name">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">06 / Der Name</span></div>
+      <div class="name-grid">
+        <div>
+          <p class="arabic">أمانة</p>
+          <p class="translit">Amana · das Anvertraute</p>
+        </div>
+        <div>
+          <p class="body">Amana ist arabisch und heißt: <strong>das Anvertraute.</strong> Gemeint ist etwas, das jemand einem anderen überlässt, weil er ihm zutraut, es zurückzugeben wie vereinbart.</p>
+          <p class="body">Eine Visitenkarte ist so eine Sache. Sie geben mir Ihre Daten und damit einen Teil Ihres Rufs. Meine Aufgabe ist es, beides sicher zu verwahren und daraus etwas zu machen, das Ihren Vorstellungen entspricht — und das am Ende Ihnen gehört. <strong>Ihre Daten sind mir geliehen, nicht übergeben.</strong> Ohne Ihre Zustimmung gebe ich sie an niemanden weiter.</p>
+          <p class="body">Ich sollte das offen sagen: Amana gibt es seit 2026, und ich arbeite allein. Deshalb nehme ich wenige Projekte gleichzeitig an, und freue mich über jede Rückmeldung zu meiner Arbeit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band cta-band" id="kontakt">
+    <div class="wrap">
+      <div class="sec-head"><span class="eyebrow">Kontakt</span></div>
+      <h2>Sehen Sie es sich<br>am Handy an</h2>
+      <p class="intro-text" style="margin-bottom:32px">Öffnen Sie oben eine der beiden Beispielkarten mit dem Telefon — das ist genau das, was Ihre Kunden sehen. Wenn es passt, schreiben Sie mir, welche Karte Sie brauchen. Sie gehen damit keine Verpflichtung ein.</p>
+      <a class="btn btn-solid" href="mailto:hallo@amana.de?subject=Karte%20anfragen"><span>Karte anfragen</span><span aria-hidden="true">→</span></a>
+      </div>
+  </section>
+
+  <footer class="wrap">
+    <p>Amana — أمانة — das Anvertraute</p>
+    <p><a href="./impressum.html">Impressum</a> · <a href="./datenschutz.html">Datenschutz</a> · <a href="#top">Nach oben</a></p>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hero = document.querySelector('.hero');
+
+  /* Fortschrittslinie */
+  var bar = document.getElementById('progress');
+  function onScroll(){
+    var max = document.body.scrollHeight - innerHeight;
+    bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
+    var hp = heroProgress();
+    hero.style.setProperty('--hp', hp.toFixed(4));
+  }
+  function heroProgress(){
+    if (!hero) return 0;
+    var span = hero.offsetHeight - innerHeight;
+    if (span <= 0) return 0;
+    return Math.min(Math.max(-hero.getBoundingClientRect().top / span, 0), 1);
+  }
+  addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* Leistungen aufklappen */
+  document.querySelectorAll('.svc').forEach(function(b){
+    b.addEventListener('click', function(){
+      var open = b.getAttribute('aria-expanded') === 'true';
+      document.querySelectorAll('.svc').forEach(function(o){ o.setAttribute('aria-expanded','false'); });
+      b.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+  });
+
+  if (reduce) return;
+
+  /* Scramble auf dem Eyebrow */
+  document.querySelectorAll('[data-scramble]').forEach(function(el){
+    var target = el.textContent, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·', frame = 0;
+    var id = setInterval(function(){
+      frame++;
+      el.textContent = target.split('').map(function(c, i){
+        if (c === ' ') return ' ';
+        return i < frame - 4 ? c : chars[Math.floor(Math.random() * chars.length)];
+      }).join('');
+      if (frame - 4 > target.length){ clearInterval(id); el.textContent = target; }
+    }, 34);
+  });
+
+  /* Eintreten beim Scrollen */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('seen'); io.unobserve(en.target); } });
+  }, {rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rise').forEach(function(el){ io.observe(el); });
+
+  /* ---------- Die Kugel ---------- */
+  if (typeof THREE === 'undefined') return;
+  var cv = document.getElementById('crystal');
+  var mobile = innerWidth < 720;
+  var dpr = Math.min(devicePixelRatio || 1, 2);
+
+  var renderer = new THREE.WebGLRenderer({canvas:cv, antialias:!mobile, alpha:true});
+  renderer.setPixelRatio(dpr);
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(45, 1, .1, 100);
+
+  /* Facettenkörper mit Fresnel-Rand — in Amanas Farben */
+  var shell = new THREE.ShaderMaterial({
+    transparent:true, depthWrite:false, side:THREE.DoubleSide,
+    uniforms:{
+      uBase:{value:new THREE.Color(0xD95F1E)},
+      uDeep:{value:new THREE.Color(0x4A1C08)},
+      uRim:{value:new THREE.Color(0xFFC46B)},
+      uOpacity:{value:1}
+    },
+    vertexShader:[
+      'varying vec3 vNormal;','varying vec3 vView;','varying vec3 vPos;',
+      'void main(){',
+      '  vNormal = normalize(normalMatrix * normal);',
+      '  vec4 mv = modelViewMatrix * vec4(position,1.0);',
+      '  vView = normalize(-mv.xyz);','  vPos = position;',
+      '  gl_Position = projectionMatrix * mv;','}'
+    ].join('\n'),
+    fragmentShader:[
+      'uniform vec3 uBase;','uniform vec3 uDeep;','uniform vec3 uRim;','uniform float uOpacity;',
+      'varying vec3 vNormal;','varying vec3 vView;','varying vec3 vPos;',
+      'void main(){',
+      '  vec3 n = normalize(vNormal);',
+      '  float fres = pow(1.0 - abs(dot(n, normalize(vView))), 2.2);',
+      '  float depth = smoothstep(-1.6, 1.6, vPos.y);',
+      '  float facet = pow(0.5 + 0.5 * dot(n, normalize(vec3(0.4,0.9,0.6))), 1.6);',
+      '  vec3 col = mix(uDeep, uBase, depth * 0.45 + facet * 0.55);',
+      '  col = mix(col, uRim, fres);',
+      '  float a = (0.22 + facet * 0.16 + fres * 0.66) * uOpacity;',
+      '  gl_FragColor = vec4(col, a);','}'
+    ].join('\n')
+  });
+
+  var body = new THREE.Mesh(new THREE.IcosahedronGeometry(1.5, 0), shell);
+  var wireMat = new THREE.LineBasicMaterial({color:0xF68A0A, transparent:true, opacity:.42});
+  var wire = new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(1.5, 0)), wireMat);
+  var innerMat = new THREE.LineBasicMaterial({color:0xFFC46B, transparent:true, opacity:.16});
+  var inner = new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(.82, 0)), innerMat);
+
+  var group = new THREE.Group();
+  group.add(body, wire, inner);
+  scene.add(group);
+
+  /* Sandstaub */
+  var count = mobile ? 110 : 240;
+  var pos = new Float32Array(count * 3), speed = new Float32Array(count);
+  for (var i = 0; i < count; i++){
+    pos[i*3]   = (Math.random() - .5) * 12;
+    pos[i*3+1] = (Math.random() - .5) * 8;
+    pos[i*3+2] = (Math.random() - .5) * 6 - 1;
+    speed[i]   = .05 + Math.random() * .22;
+  }
+  var pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  var pMat = new THREE.ShaderMaterial({
+    transparent:true, depthWrite:false,
+    uniforms:{uDpr:{value:dpr}},
+    vertexShader:[
+      'uniform float uDpr;',
+      'void main(){',
+      '  vec4 mv = modelViewMatrix * vec4(position,1.0);',
+      '  gl_PointSize = (36.0 / -mv.z) * uDpr * 0.35;',
+      '  gl_Position = projectionMatrix * mv;','}'
+    ].join('\n'),
+    fragmentShader:[
+      'void main(){',
+      '  float d = length(gl_PointCoord - 0.5);',
+      '  float a = smoothstep(0.5, 0.05, d) * 0.42;',
+      '  gl_FragColor = vec4(1.0, 0.77, 0.42, a);','}'
+    ].join('\n')
+  });
+  scene.add(new THREE.Points(pGeo, pMat));
+
+  function resize(){
+    var w = cv.clientWidth || cv.parentElement.clientWidth;
+    var h = cv.clientHeight || cv.parentElement.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.position.z = w < 720 ? 8.4 : 6;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  addEventListener('resize', resize);
+
+  var px = 0, py = 0, tx = 0, ty = 0;
+  if (!mobile) addEventListener('pointermove', function(e){
+    tx = (e.clientX / innerWidth - .5) * 2;
+    ty = (e.clientY / innerHeight - .5) * 2;
+  }, {passive:true});
+
+  var visible = true;
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(e){ visible = e[0].isIntersecting; }).observe(cv);
+  }
+
+  var clock = new THREE.Clock();
+  function frame(){
+    var t = clock.getElapsedTime(), hp = heroProgress();
+    group.rotation.y = t * .12 + hp * 2.4 + px * .22;
+    group.rotation.x = .42 + Math.sin(t * .18) * .05 + hp * .5 + py * .14;
+    inner.rotation.y = -t * .2 - hp * 1.2;
+    inner.rotation.z = t * .08;
+    var s = .74 + hp * .5;
+    group.scale.set(s, s, s);
+    group.position.y = Math.sin(t * .4) * .06 + hp * .9;
+    shell.uniforms.uOpacity.value = 1 - Math.max(0, hp - .72) / .28;
+    wireMat.opacity = .42 * (1 - hp * .5);
+
+    var arr = pGeo.attributes.position.array;
+    for (var j = 0; j < count; j++){
+      arr[j*3+1] += speed[j] * .004;
+      if (arr[j*3+1] > 4.2) arr[j*3+1] = -4.2;
+    }
+    pGeo.attributes.position.needsUpdate = true;
+
+    px += (tx - px) * .04;
+    py += (ty - py) * .04;
+    renderer.render(scene, camera);
+  }
+  renderer.setAnimationLoop(function(){ if (visible && !document.hidden) frame(); });
+})();
+</script>
+
+</body>
+</html>

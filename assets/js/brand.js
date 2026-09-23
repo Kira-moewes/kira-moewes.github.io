@@ -1,6 +1,6 @@
 /* Gilt für ALLE Karten – einmal eintragen, wirkt überall.
-   Erscheint klein in der Fußzeile jeder Kundenkarte. */
+   Erscheint klein in der Fußzeile jeder Kunden- und Bewertungskarte. */
 window.BRAND = {
-  label: "Digitale Visitenkarte",   // z. B. "Karte von MOEWES"
-  url:   ""                          // z. B. "https://deine-domain.de" – leer = kein Link
+  label: "Karte von AMANA",                         // Text in der Fußzeile
+  url:   "https://kira-moewes.github.io/amana/"     // Ziel – leer = kein Link
 };
