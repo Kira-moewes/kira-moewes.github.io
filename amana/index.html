@@ -73,21 +73,17 @@
   .hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin:0 0 clamp(1.4rem,3vw,2.4rem)}
   .hero-title{
     font-family:var(--display);font-stretch:125%;font-weight:300;
-    font-size:clamp(2.2rem,6.2vw,5.2rem);line-height:1.06;letter-spacing:.13em;
-    text-transform:uppercase;text-wrap:balance;max-width:17ch;margin:0 auto;
+    font-size:clamp(2.6rem,7.6vw,6rem);line-height:1.18;letter-spacing:.34em;
+    text-transform:uppercase;max-width:none;margin:0 auto;text-indent:.34em;
   }
   .hero-title .line{display:block;overflow:hidden}
   .hero-title .line-in{display:inline-block;transform:translateY(112%);animation:line-rise 1.05s var(--ease) forwards}
   .hero-title .line:nth-child(2) .line-in{animation-delay:.09s}
   .hero-title .line:nth-child(3) .line-in{animation-delay:.18s}
   .hero-title .em{color:var(--halo)}
+  @media (max-width:420px){.hero-title{font-size:clamp(2rem,6.4vw,2.6rem);letter-spacing:.24em;text-indent:.24em}}
   @keyframes line-rise{to{transform:none}}
 
-  .slogan{margin:clamp(1.8rem,4vw,3rem) auto 0;padding:0;display:flex;flex-direction:column;gap:.34em}
-  .slogan span{font-family:var(--mono);font-weight:500;font-size:clamp(12px,1.9vw,15px);letter-spacing:.44em;text-transform:uppercase;color:var(--muted);margin-right:-.44em;animation:page-in .9s var(--ease) both}
-  .slogan span:nth-child(1){animation-delay:.5s}
-  .slogan span:nth-child(2){animation-delay:.64s;color:var(--halo)}
-  .slogan span:nth-child(3){animation-delay:.78s}
   .hero-cta{margin-top:clamp(2.2rem,5vw,3.4rem);display:flex;justify-content:center;gap:14px;flex-wrap:wrap;animation:page-in 1s var(--ease) .5s both}
 
   .btn{display:inline-flex;align-items:center;gap:.75em;padding:.95em 1.7em;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;position:relative;overflow:hidden;transition:color .4s var(--ease),border-color .4s var(--ease)}
@@ -227,15 +223,10 @@
 
     <div class="wrap">
       <h1 class="hero-title">
-        <span class="line"><span class="line-in">Eine Visitenkarte,</span></span>
-        <span class="line"><span class="line-in">die nie im <span class="em">Müll</span></span></span>
-        <span class="line"><span class="line-in">landet?</span></span>
+        <span class="line"><span class="line-in">Scan</span></span>
+        <span class="line"><span class="line-in"><span class="em">Click</span></span></span>
+        <span class="line"><span class="line-in">Connect</span></span>
       </h1>
-      <p class="slogan">
-        <span>Scan</span>
-        <span>Click</span>
-        <span>Connect</span>
-      </p>
       <div class="hero-cta">
         <a class="btn btn-solid" href="#kontakt"><span>Karte anfragen</span><span aria-hidden="true">→</span></a>
         <a class="btn btn-ghost" href="#arbeitsprobe"><span>Karte ausprobieren</span></a>
