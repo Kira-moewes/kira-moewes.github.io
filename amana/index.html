@@ -83,7 +83,11 @@
   .hero-title .em{color:var(--halo)}
   @keyframes line-rise{to{transform:none}}
 
-  .hero-sub{margin:clamp(1.4rem,3vw,2.2rem) auto 0;max-width:46rem;font-family:var(--mono);font-size:12.5px;line-height:1.95;letter-spacing:.02em;color:var(--muted);animation:page-in 1s var(--ease) .5s both}
+  .slogan{margin:clamp(1.8rem,4vw,3rem) auto 0;padding:0;display:flex;flex-direction:column;gap:.34em}
+  .slogan span{font-family:var(--mono);font-weight:500;font-size:clamp(12px,1.9vw,15px);letter-spacing:.44em;text-transform:uppercase;color:var(--muted);margin-right:-.44em;animation:page-in .9s var(--ease) both}
+  .slogan span:nth-child(1){animation-delay:.5s}
+  .slogan span:nth-child(2){animation-delay:.64s;color:var(--halo)}
+  .slogan span:nth-child(3){animation-delay:.78s}
   .hero-cta{margin-top:clamp(2.2rem,5vw,3.4rem);display:flex;justify-content:center;gap:14px;flex-wrap:wrap;animation:page-in 1s var(--ease) .5s both}
 
   .btn{display:inline-flex;align-items:center;gap:.75em;padding:.95em 1.7em;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;position:relative;overflow:hidden;transition:color .4s var(--ease),border-color .4s var(--ease)}
@@ -223,11 +227,15 @@
 
     <div class="wrap">
       <h1 class="hero-title">
-        <span class="line"><span class="line-in">Eine Karte,</span></span>
-        <span class="line"><span class="line-in">ein <span class="em">Tipp</span>,</span></span>
-        <span class="line"><span class="line-in">gespeichert.</span></span>
+        <span class="line"><span class="line-in">Eine Visitenkarte,</span></span>
+        <span class="line"><span class="line-in">die nie im <span class="em">Müll</span></span></span>
+        <span class="line"><span class="line-in">landet?</span></span>
       </h1>
-      <p class="hero-sub">Handy an die Karte halten, die Seite öffnet sich. Kontakt speichern oder bewerten — ohne App, ohne Abtippen. Kein NFC am Gerät? Dann der QR-Code auf der Rückseite.</p>
+      <p class="slogan">
+        <span>Scan</span>
+        <span>Click</span>
+        <span>Connect</span>
+      </p>
       <div class="hero-cta">
         <a class="btn btn-solid" href="#kontakt"><span>Karte anfragen</span><span aria-hidden="true">→</span></a>
         <a class="btn btn-ghost" href="#arbeitsprobe"><span>Karte ausprobieren</span></a>
