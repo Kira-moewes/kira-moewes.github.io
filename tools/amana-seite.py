@@ -29,7 +29,7 @@ KOPF = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Amana — Digitale Visitenkarten und Bewertungskarten</title>
-<meta name="description" content="NFC-Karten mit eigener Seite: Kontaktdaten speichern oder bewerten, ohne App und ohne Abtippen.">
+<meta name="description" content="NFC-Karten mit eigener Seite: Scan, Click, Connect — Kontakt speichern oder bewerten.">
 <meta name="robots" content="noindex,nofollow">
 """
 
