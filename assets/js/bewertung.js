@@ -43,24 +43,31 @@
   for (var i = 0; i < 5; i++) { sterne += svgIcon("star", "stern"); }
   $("sterne").innerHTML = sterne;
 
-  /* Hauptknopf + weitere Plattformen */
+  /* Hauptknopf + weitere Plattformen.
+     Fehlt der Link, erscheint ein Hinweis statt eines Knopfes ins Leere. */
   var ziele = (b.ziele || []).filter(function (z) { return z.url; });
-  if (!ziele.length) { $("aktionen").innerHTML = ""; return; }
 
-  var erste = ziele[0];
-  $("aktionen").innerHTML =
-    '<a class="btn btn-primary" href="' + esc(erste.url) + '" target="_blank" rel="noopener">' +
-      svgIcon(erste.icon || "google") + esc(erste.label || "Jetzt bewerten") +
-    '</a>' +
-    (ziele.length > 1
-      ? '<ul class="weitere">' + ziele.slice(1).map(function (z) {
-          return '<li><a class="link" href="' + esc(z.url) + '" target="_blank" rel="noopener">' +
-                 svgIcon(z.icon) +
-                 '<span class="link-text"><span class="link-label">' + esc(z.label) + '</span>' +
-                 (z.sub ? '<span class="link-sub">' + esc(z.sub) + '</span>' : "") + '</span>' +
-                 '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>';
-        }).join("") + '</ul>'
-      : "");
+  if (!ziele.length) {
+    $("aktionen").innerHTML =
+      '<p class="hinweis">Der Bewertungslink ist noch nicht hinterlegt. ' +
+      'Diese Karte funktioniert, sobald er eingetragen ist.</p>';
+  } else {
+    var erste = ziele[0];
+    $("aktionen").innerHTML =
+      '<a class="btn btn-primary" href="' + esc(erste.url) + '" target="_blank" rel="noopener">' +
+        svgIcon(erste.icon || "google") + esc(erste.label || "Jetzt bewerten") +
+      '</a>' +
+      (erste.sub ? '<p class="hinweis">' + esc(erste.sub) + '</p>' : "") +
+      (ziele.length > 1
+        ? '<ul class="weitere">' + ziele.slice(1).map(function (z) {
+            return '<li><a class="link" href="' + esc(z.url) + '" target="_blank" rel="noopener">' +
+                   svgIcon(z.icon) +
+                   '<span class="link-text"><span class="link-label">' + esc(z.label) + '</span>' +
+                   (z.sub ? '<span class="link-sub">' + esc(z.sub) + '</span>' : "") + '</span>' +
+                   '<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>';
+          }).join("") + '</ul>'
+        : "");
+  }
 
   /* Signatur in der Fusszeile (assets/js/brand.js) */
   var brand = window.BRAND || {};

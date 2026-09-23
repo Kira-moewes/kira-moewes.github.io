@@ -22,8 +22,18 @@ Bewertungskarte anlegen:
 python3 tools/neue-bewertungskarte.py "Salon Nord" --google "https://g.page/r/XXXX/review"
 ```
 
-Den Link holst du im Google-Unternehmensprofil des Betriebs unter
-*Rezension schreiben → Link kopieren*. Der Chip zeigt auf deine Seite, nicht
+**Den richtigen Google-Link finden** — es muss der Link zum *Formular* sein,
+nicht zum Eintrag:
+
+- **Mit Zugang:** Der Betrieb öffnet sein Google-Unternehmensprofil →
+  *Rezensionen* → *Mehr Rezensionen erhalten*. Der Link sieht so aus:
+  `https://g.page/r/XXXXXXXXXXXX/review`
+- **Ohne Zugang:** In Google Maps den Betrieb suchen, auf *Rezension
+  schreiben* tippen, die Adresse aus der Adresszeile kopieren.
+
+Ein Link, der nur `google.com` oder die Firmenseite öffnet, ist falsch —
+dann landet der Gast in der Suche statt im Bewertungsfenster. Fehlt der
+Link ganz, zeigt die Karte einen Hinweis statt eines Knopfes ins Leere. Der Chip zeigt auf deine Seite, nicht
 direkt auf Google — so lässt sich das Ziel später ändern, ohne die Karten
 beim Kunden einzusammeln.
 
