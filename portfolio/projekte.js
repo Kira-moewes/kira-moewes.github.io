@@ -28,6 +28,16 @@ window.PROJEKTE = [
 
   /* ------------------------------------------------- Schwerpunkt Gestaltung */
   {
+    titel:   "Startklar",
+    gruppe:  "Schwerpunkt Gestaltung",
+    art:     "Web-App",
+    jahr:    "2026",
+    satz:    "Erwachsenwerden, aber machbar",
+    label:   "Entwurf",
+    ziel:    "https://startklar-six.vercel.app/"
+  },
+
+  {
     titel:   "Planvoller GmbH",
     gruppe:  "Schwerpunkt Gestaltung",
     art:     "Website",
@@ -76,17 +86,6 @@ window.PROJEKTE = [
     satz:    "Erfundene Marke",
     label:   "Entwurf",
     ziel:    "https://kira-moewes.github.io/webgewerk-agenten/"
-  },
-
-  /* ------------------------------------------------------------------ Apps */
-  {
-    titel:   "Startklar",
-    gruppe:  "Apps",
-    art:     "Web-App",
-    jahr:    "2026",
-    satz:    "Erwachsenwerden, aber machbar",
-    label:   "",
-    ziel:    "https://startklar-six.vercel.app/"
   }
 
 ];
