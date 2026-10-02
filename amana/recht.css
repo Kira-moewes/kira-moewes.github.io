@@ -20,3 +20,5 @@ a{color:var(--halo)}
   font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
   text-decoration:none;border:1px solid var(--line);padding:.9em 1.6em}
 .zurueck:hover{color:var(--halo);border-color:var(--rust)}
+.stand{margin-top:36px;font-family:'JetBrains Mono','Consolas',ui-monospace,monospace;
+  font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
