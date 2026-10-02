@@ -27,11 +27,17 @@
   }
 
   *{box-sizing:border-box}
+  /* Klick auf einen Navigationspunkt gleitet statt zu springen, und das Ziel
+     landet unter der festen Leiste statt dahinter. Wer in den Systemeinstellungen
+     weniger Bewegung verlangt, springt weiter hart - siehe Regel ganz unten. */
+  html{scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 12px)}
   body{margin:0;background:var(--void);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
   .wrap{max-width:var(--wrap);margin:0 auto;padding:0 var(--pad)}
   .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin:0}
 
-  #progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;background:linear-gradient(90deg,var(--rust),var(--gold),var(--halo));transition:width .08s linear}
+  /* Die Linie wird gestaucht, nicht verbreitert: eine Breitenaenderung laesst
+     den Browser das Layout neu rechnen, scaleX nur die Grafikkarte arbeiten. */
+  #progress{position:fixed;top:0;left:0;height:2px;width:100%;z-index:60;background:linear-gradient(90deg,var(--rust),var(--gold),var(--halo));transform:scaleX(0);transform-origin:0 50%;will-change:transform}
 
   nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);background:linear-gradient(180deg,rgba(10,5,3,.9),rgba(10,5,3,0));animation:page-in .9s var(--ease) both}
   nav .mark{font-family:var(--display);font-stretch:125%;font-weight:500;font-size:13px;letter-spacing:.5em;text-transform:uppercase;color:var(--text);text-decoration:none}
@@ -210,7 +216,7 @@
   .rise.seen{transform:none}
 
   a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rise{transform:none}.hero-title .line-in{transform:none}.hero{height:auto}.hero-sticky{position:relative}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}.rise{transform:none}.hero-title .line-in{transform:none}.hero{height:auto}.hero-sticky{position:relative}}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -443,22 +449,49 @@
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hero = document.querySelector('.hero');
 
-  /* Fortschrittslinie */
+  /* Fortschrittslinie.
+
+     Vorher rechnete diese Funktion bei JEDEM Scroll-Ereignis drei Masse aus
+     (scrollHeight, offsetHeight, getBoundingClientRect) und schrieb danach
+     wieder in die Seite. Jedes dieser Masse zwingt den Browser, das Layout
+     sofort neu zu rechnen - lesen, schreiben, lesen, schreiben, dutzende Mal
+     pro Sekunde. Das ist der Grund, warum das Scrollen gehakt hat.
+
+     Jetzt: die Masse werden einmal genommen und nur bei Groessenaenderung
+     erneuert, und geschrieben wird hoechstens einmal pro Bild (rAF =
+     requestAnimationFrame, der Takt, in dem der Browser ohnehin zeichnet). */
   var bar = document.getElementById('progress');
+  var maxScroll = 0, heroTop = 0, heroSpan = 0, geplant = false;
+
+  function messen(){
+    maxScroll = document.body.scrollHeight - innerHeight;
+    if (hero){
+      heroTop  = hero.getBoundingClientRect().top + scrollY;
+      heroSpan = hero.offsetHeight - innerHeight;
+    }
+    zeichnen();
+  }
+
+  function zeichnen(){
+    geplant = false;
+    var y = scrollY;
+    bar.style.transform = 'scaleX(' + (maxScroll > 0 ? Math.min(y / maxScroll, 1) : 0) + ')';
+    if (hero && heroSpan > 0){
+      var hp = Math.min(Math.max((y - heroTop) / heroSpan, 0), 1);
+      hero.style.setProperty('--hp', hp.toFixed(4));
+    }
+  }
+
   function onScroll(){
-    var max = document.body.scrollHeight - innerHeight;
-    bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
-    var hp = heroProgress();
-    hero.style.setProperty('--hp', hp.toFixed(4));
+    if (geplant) return;
+    geplant = true;
+    requestAnimationFrame(zeichnen);
   }
-  function heroProgress(){
-    if (!hero) return 0;
-    var span = hero.offsetHeight - innerHeight;
-    if (span <= 0) return 0;
-    return Math.min(Math.max(-hero.getBoundingClientRect().top / span, 0), 1);
-  }
+
   addEventListener('scroll', onScroll, {passive:true});
-  onScroll();
+  addEventListener('resize', messen, {passive:true});
+  addEventListener('load', messen);
+  messen();
 
   /* Leistungen aufklappen */
   document.querySelectorAll('.svc').forEach(function(b){

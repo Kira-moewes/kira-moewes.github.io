@@ -21,6 +21,10 @@
 }
 
 *{box-sizing:border-box}
+/* Der Knopf "Nach oben" gleitet statt zu springen. Das ist keine Animation
+   der Seite - die Kacheln stehen weiter sofort da; es betrifft nur den Weg,
+   den der Bildschirm bei einem Ankerklick nimmt. */
+html{scroll-behavior:smooth}
 body{
   margin:0;background:var(--void);color:var(--text);
   font-family:var(--body);font-size:16px;line-height:1.62;
@@ -154,4 +158,5 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offse
    Farbwechsel beim Zeigen bleibt - das ist Rueckmeldung, keine Animation. */
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
 }

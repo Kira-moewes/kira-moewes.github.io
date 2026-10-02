@@ -2,6 +2,10 @@
 :root{--void:#0A0503;--line:#32180C;--rust:#9F3C12;--gold:#F68A0A;--halo:#FFC46B;
 --text:#E8DDD2;--muted:#9A8578;--faint:#6B584C;--pad:clamp(1.25rem,4vw,3rem)}
 *{box-sizing:border-box}
+/* Gleiches Scrollverhalten wie auf den anderen Seiten, damit nichts aus der
+   Reihe faellt, falls diese Texte spaeter ein Inhaltsverzeichnis bekommen. */
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--void);color:var(--text);
   font-family:'Instrument Sans','Segoe UI',system-ui,sans-serif;font-size:16px;line-height:1.7}
 .wrap{max-width:760px;margin:0 auto;padding:clamp(48px,9vw,96px) var(--pad)}
