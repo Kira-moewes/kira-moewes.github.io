@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Karte nicht gefunden</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0B0908">
+<link rel="icon" href="/assets/img/favicon.png" type="image/png">
+<link rel="stylesheet" href="/assets/css/style.css?v=20261002-1340">
+<script>
+/* Rettungsnetz: Tippfehler in der Adresse selbst geradeziehen.
+   Haeufigster Fall: ein Leerzeichen (%20) am Ende, das beim Kopieren
+   mitgerutscht ist und auf dem NFC-Chip steht. Auch Grossbuchstaben,
+   doppelte Schraegstriche und ein fehlender Schraegstrich am Ende
+   werden korrigiert; danach wird auf die richtige Adresse geleitet. */
+(function () {
+  "use strict";
+  var roh = location.pathname;
+  var pfad;
+  try { pfad = decodeURIComponent(roh); } catch (e) { pfad = roh; }
+
+  var sauber = pfad
+    .replace(/\s+/g, "")        /* Leerzeichen entfernen */
+    .replace(/\/{2,}/g, "/")    /* doppelte Schraegstriche */
+    .toLowerCase();             /* alle Ordner sind klein geschrieben */
+
+  if (sauber && !/\.[a-z0-9]{2,5}$/.test(sauber) && sauber.slice(-1) !== "/") {
+    sauber += "/";              /* fehlender Schraegstrich am Ende */
+  }
+
+  if (sauber && sauber !== roh && sauber !== pfad) {
+    location.replace(sauber + location.search + location.hash);
+  }
+})();
+</script>
+</head>
+<body>
+
+<div class="brandbar">
+  <img class="brandmark" src="/assets/img/logo.png" alt="">
+</div>
+
+<main class="card">
+  <header class="hero">
+    <h1>Karte nicht gefunden</h1>
+    <p class="role">Adresse stimmt nicht</p>
+    <p class="bio">
+      Unter dieser Adresse liegt keine Kontaktkarte. Bitte prüfe, ob du sie
+      vollständig eingegeben hast — oder wende dich an die Person, von der du
+      die Karte bekommen hast.
+    </p>
+  </header>
+</main>
+
+</body>
+</html>
