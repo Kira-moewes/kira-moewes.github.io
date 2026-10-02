@@ -7,18 +7,21 @@
      titel   Überschrift der Kachel
      gruppe  Abschnitt. Die Abschnitte erscheinen in der Reihenfolge, in der
              sie hier zuerst vorkommen. Bisher: "Schwerpunkt Gestaltung"
-             (Bewegung, 3D, Technik die auf den Besucher reagiert) und
-             "Schwerpunkt Vertrieb" (ruhig gebaut, verkauft eine Leistung)
+             (Bewegung, 3D, Technik die auf den Besucher reagiert),
+             "Schwerpunkt Vertrieb" (ruhig gebaut, verkauft eine Leistung) und
+             "Schwerpunkt Automatisierung" (nimmt Arbeit ab, keine Website)
      jahr    erscheint klein über dem Titel
      satz    zwei bis drei Wörter, was es ist. Kein Satz, keine Erklärung.
-     label   "Entwurf" oder ""
+     label   "Entwurf" bei allem, was nicht in Benutzung ist. "Im Einsatz" nur
+             bei Systemen, die wirklich laufen. "" lässt das Schild weg.
      ziel    Adresse der Arbeit, relativ zu diesem Ordner. Fremde Adressen
              (mit https) öffnen von allein in einem neuen Tab.
      art     nur zur eigenen Ordnung, steht nicht auf der Seite
 
-   Alle Projekte liegen unter eigener Adresse und öffnen in einem neuen
+   Die Website-Projekte liegen unter eigener Adresse und öffnen in einem neuen
    Tab. Die anonymisierten Kopien, die hier einmal unter ./p/ lagen, sind
-   gelöscht — niemand verlinkte sie mehr.
+   gelöscht — niemand verlinkte sie mehr. Was kein öffentliches System sein
+   darf, bekommt eine Fallbeschreibung im Portfolio (siehe ./fall-belege/).
 
    Reihenfolge innerhalb eines Abschnitts: das Auffälligste zuerst.
    Die Einteilung ist gemessen, nicht geschätzt — Keyframes, Transforms,
@@ -86,6 +89,19 @@ window.PROJEKTE = [
     satz:    "Erfundene Marke",
     label:   "Entwurf",
     ziel:    "https://kira-moewes.github.io/webgewerk-agenten/"
+  },
+
+  /* ---------------------------------------------- Schwerpunkt Automatisierung
+     Kein Link auf ein laufendes System: das verarbeitet echte Betriebsbelege.
+     Die Kachel fuehrt auf eine Fallbeschreibung mit erfundenen Beispielen. */
+  {
+    titel:   "Belegpipeline",
+    gruppe:  "Schwerpunkt Automatisierung",
+    art:     "Automatisierung",
+    jahr:    "2026",
+    satz:    "Belege sortieren sich selbst",
+    label:   "Im Einsatz",
+    ziel:    "./fall-belege/"
   }
 
 ];

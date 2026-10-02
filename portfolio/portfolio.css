@@ -80,6 +80,10 @@ body{
   transition:background .5s var(--ease);
 }
 .kachel:hover,.kachel:focus-visible{background:#1E0F08}
+/* Steht in einem Abschnitt nur eine Kachel, nimmt sie die ganze Reihe. Sonst
+   bleiben die leeren Spalten als brauner Block daneben stehen und sehen aus
+   wie ein Fehler. */
+.raster > .kachel:only-child{grid-column:1/-1}
 .kachel::after{
   content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;
   background:var(--gold);transform:scaleX(0);transform-origin:left;
