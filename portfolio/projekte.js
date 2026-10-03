@@ -31,7 +31,7 @@ window.PROJEKTE = [
   {
     titel:   "Startklar",
     gruppe:  "Schwerpunkt Gestaltung",
-    art:     "Web-App",
+    art:     "Website",
     jahr:    "2026",
     satz:    "Erwachsenwerden, aber machbar",
     label:   "Entwurf",
