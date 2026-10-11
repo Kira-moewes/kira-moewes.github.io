@@ -52,6 +52,19 @@ body{
 }
 .kopf h1 .em{color:var(--halo)}
 
+/* ---------- Bereiche: die grosse Ebene ----------
+   Der Bereich muss auf einen Blick ueber den Schwerpunkten stehen. Das macht
+   hier die Groesse zusammen mit der kraeftigen Linie darueber - nicht eine
+   zweite Farbe, davon hat die Seite schon genug. */
+.bereich + .bereich{margin-top:clamp(64px,10vw,120px)}
+.bereich-titel{
+  margin:0 0 clamp(28px,4vw,44px);padding-top:clamp(18px,2.5vw,26px);
+  border-top:2px solid var(--rust);
+  font-family:var(--display);font-stretch:125%;font-weight:300;
+  font-size:clamp(26px,5.2vw,46px);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--text);
+}
+
 /* ---------- Abschnitte ---------- */
 .gruppe + .gruppe{margin-top:clamp(44px,7vw,76px)}
 .gruppe-titel{

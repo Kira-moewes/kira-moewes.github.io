@@ -5,10 +5,15 @@
    Die Seite baut Abschnitte und Kacheln daraus von allein.
 
      titel   Überschrift der Kachel
-     gruppe  Abschnitt. Die Abschnitte erscheinen in der Reihenfolge, in der
-             sie hier zuerst vorkommen. Bisher: "Schwerpunkt Gestaltung"
-             (Bewegung, 3D, Technik die auf den Besucher reagiert) und
-             "Schwerpunkt Vertrieb" (ruhig gebaut, verkauft eine Leistung)
+     bereich Grosse Ueberschrift. Bisher nur "Websites"; Automatisierungen
+             bekommen einen eigenen Bereich, sobald dort etwas steht.
+     gruppe  Unterteilung innerhalb des Bereichs. Bisher "Schwerpunkt
+             Gestaltung" (Bewegung, 3D, Technik die auf den Besucher
+             reagiert) und "Schwerpunkt Vertrieb" (ruhig gebaut, verkauft
+             eine Leistung). Leer lassen, wenn ein Bereich keine
+             Unterteilung braucht - dann stehen die Kacheln direkt darunter.
+             Bereiche und Gruppen erscheinen in der Reihenfolge, in der sie
+             hier zuerst vorkommen.
      jahr    erscheint klein über dem Titel
      satz    zwei bis drei Wörter, was es ist. Kein Satz, keine Erklärung.
      label   "Entwurf" oder ""
@@ -30,6 +35,7 @@ window.PROJEKTE = [
   /* ------------------------------------------------- Schwerpunkt Gestaltung */
   {
     titel:   "Startklar",
+    bereich: "Websites",
     gruppe:  "Schwerpunkt Gestaltung",
     art:     "Website",
     jahr:    "2026",
@@ -40,6 +46,7 @@ window.PROJEKTE = [
 
   {
     titel:   "Planvoller GmbH",
+    bereich: "Websites",
     gruppe:  "Schwerpunkt Gestaltung",
     art:     "Website",
     jahr:    "2026",
@@ -50,6 +57,7 @@ window.PROJEKTE = [
 
   {
     titel:   "Klarfeld Unternehmensberatung",
+    bereich: "Websites",
     gruppe:  "Schwerpunkt Gestaltung",
     art:     "Website",
     jahr:    "2026",
@@ -60,6 +68,7 @@ window.PROJEKTE = [
 
   {
     titel:   "Thai Imbiss Nam Fon",
+    bereich: "Websites",
     gruppe:  "Schwerpunkt Gestaltung",
     art:     "Website",
     jahr:    "2026",
@@ -71,6 +80,7 @@ window.PROJEKTE = [
   /* --------------------------------------------------- Schwerpunkt Vertrieb */
   {
     titel:   "Neuenfeld Elektroinstallationen",
+    bereich: "Websites",
     gruppe:  "Schwerpunkt Vertrieb",
     art:     "Website",
     jahr:    "2026",
@@ -81,6 +91,7 @@ window.PROJEKTE = [
 
   {
     titel:   "Webgewerk · Automatisierung",
+    bereich: "Websites",
     gruppe:  "Schwerpunkt Vertrieb",
     art:     "Marke",
     jahr:    "2026",

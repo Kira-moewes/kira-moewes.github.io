@@ -31,21 +31,40 @@
            '</a>';
   }
 
-  /* Abschnitte in der Reihenfolge ihres ersten Auftretens in projekte.js.
-     Projekte ohne Angabe landen unter "Weitere". */
-  var reihenfolge = [], nach = {};
+  /* Zwei Ebenen: Bereich ueber Schwerpunkt.
+
+       bereich  "Websites", "Automatisierung" - die grosse Ueberschrift
+       gruppe   "Schwerpunkt Gestaltung" usw. - die Unterteilung darin
+
+     Beide erscheinen in der Reihenfolge ihres ersten Auftretens in
+     projekte.js. Ein Bereich ohne gruppe zeigt seine Kacheln direkt, ohne
+     Zwischenueberschrift - das ist der Normalfall, solange dort nur eine Art
+     Arbeit liegt. */
+  var bereiche = [], nach = {};
   projekte.forEach(function (p) {
-    var g = p.gruppe || "Weitere";
-    if (!nach[g]) { nach[g] = []; reihenfolge.push(g); }
-    nach[g].push(p);
+    var b = p.bereich || "Arbeiten";
+    var g = p.gruppe || "";
+    if (!nach[b]) { nach[b] = { reihenfolge: [], gruppen: {} }; bereiche.push(b); }
+    if (!nach[b].gruppen[g]) { nach[b].gruppen[g] = []; nach[b].reihenfolge.push(g); }
+    nach[b].gruppen[g].push(p);
   });
 
+  function raster(liste) {
+    return '<div class="raster">' + liste.map(kachel).join("") + '</div>';
+  }
 
-  ziel.innerHTML = reihenfolge.length
-    ? reihenfolge.map(function (g) {
-        return '<section class="gruppe">' +
-                 '<h2 class="gruppe-titel">' + esc(g) + '</h2>' +
-                 '<div class="raster">' + nach[g].map(kachel).join("") + '</div>' +
+  ziel.innerHTML = bereiche.length
+    ? bereiche.map(function (b) {
+        var inhalt = nach[b].reihenfolge.map(function (g) {
+          if (!g) return raster(nach[b].gruppen[g]);
+          return '<section class="gruppe">' +
+                   '<h3 class="gruppe-titel">' + esc(g) + '</h3>' +
+                   raster(nach[b].gruppen[g]) +
+                 '</section>';
+        }).join("");
+        return '<section class="bereich">' +
+                 '<h2 class="bereich-titel">' + esc(b) + '</h2>' +
+                 inhalt +
                '</section>';
       }).join("")
     : '<p class="leer">Hier steht noch keine Arbeit.</p>';
