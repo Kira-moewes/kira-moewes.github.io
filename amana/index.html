@@ -6,7 +6,7 @@
 <title>Amana — Digitale Visitenkarten und Bewertungskarten</title>
 <meta name="description" content="NFC-Karten mit eigener Seite: Scan, Click, Connect — Kontakt speichern oder bewerten.">
 <meta name="robots" content="noindex,nofollow">
-<link rel="stylesheet" href="../assets/fonts/amana.css?v=20261006-2027">
+<link rel="stylesheet" href="../assets/fonts/amana.css?v=20261021-0904">
 <style>
   :root{
     --void:#0A0503; --ember:#150B06; --char:#241108; --line:#32180C;
@@ -40,30 +40,36 @@
   nav a.nl:hover::after,nav a.nl:focus-visible::after{transform:scaleX(1);transform-origin:left}
   @media (max-width:680px){nav ul{display:none}}
 
-  /* ================= HERO mit Kugel ================= */
-  .hero{position:relative;height:190vh}
-  .hero-sticky{
-    position:sticky;top:0;height:100svh;min-height:560px;
-    display:flex;flex-direction:column;justify-content:center;
-    overflow:hidden;isolation:isolate;
+  /* ================= HERO mit Kartenfoto ================= */
+  .hero{
+    position:relative;overflow:hidden;isolation:isolate;
+    min-height:100svh;padding-bottom:clamp(64px,9vw,96px);
     background:
-      radial-gradient(60vw 50vw at 50% 34%, rgba(246,138,10,.16), transparent 64%),
-      linear-gradient(200deg,#140D0B 0%,#1C1310 52%,#0A0503 100%);
+      radial-gradient(52vw 34vw at 50% 0%, rgba(246,138,10,.13), transparent 70%),
+      #000;
   }
-  .hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
-
-  /* Dünenkante als Boden unter der Kugel */
-  .dune,.dune-ridge{position:absolute;z-index:2;width:220%;height:150%;left:-60%;top:74%;border-radius:56% 44% 0 0 / 46% 40% 0 0;transform:rotate(-4deg);pointer-events:none}
-  .dune{background:linear-gradient(168deg,#B94F1B 0%,#8E3510 40%,#4A1F0C 74%,#1A0B04 100%)}
-  .dune-ridge{box-shadow:inset 0 2px 0 0 rgba(255,196,107,.45)}
+  /* Unterkante laeuft weich in den Seitengrund ueber */
+  .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:120px;z-index:3;pointer-events:none;background:linear-gradient(180deg,rgba(10,5,3,0),var(--void))}
 
   .hud{position:absolute;z-index:4;font-family:var(--mono);font-size:10px;line-height:1.7;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0}
   .hud-bl{bottom:22px;left:var(--pad)}
   .hud-br{bottom:22px;right:var(--pad);text-align:right}
 
-  .hero .wrap{position:relative;z-index:5;text-align:center;padding-top:calc(var(--nav-h) + 1.5rem)}
-  .hero-stagger{transform:translateY(calc(var(--hp,0) * -14vh));opacity:calc(1 - var(--hp,0) * 1.4)}
-  .hud{opacity:calc(1 - var(--hp,0) * 2.5)}
+  .hero .wrap{position:relative;z-index:5;text-align:center;padding-top:calc(var(--nav-h) + clamp(2rem,6vh,4.5rem))}
+
+  /* Das Foto der Karte. Der Fotohintergrund ist schwarz wie der Hero; die
+     Maske laesst die Raender ausblenden, damit keine Bildkante zu sehen ist.
+     Auf dem Handy breiter als der Bildschirm, sonst waere die Karte klein. */
+  .hero-bild{
+    position:relative;z-index:2;margin:clamp(-150px,-11vw,-60px) auto 0;
+    width:min(100%,125vh,1180px);
+    -webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 62%,transparent 100%);
+            mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 62%,transparent 100%);
+    animation:bild-in 1.8s var(--ease) .25s both;
+  }
+  .hero-bild img{display:block;width:100%;height:auto}
+  @media (max-width:720px){.hero-bild{width:150%;margin-left:-25%;margin-top:-40px}}
+  @keyframes bild-in{from{opacity:0;transform:scale(1.04)}}
 
   .hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin:0 0 clamp(1.4rem,3vw,2.4rem)}
   .hero-title{
@@ -204,14 +210,25 @@
   footer a{color:var(--faint);text-decoration:none;transition:color .3s var(--ease)}
   footer a:hover{color:var(--halo)}
 
+  /* Fotos in den Abschnitten: gerahmt wie die Kacheln, damit die schwarze
+     Bildflaeche als Absicht wirkt und nicht als Kante */
+  .foto{margin:0;border:1px solid var(--line);background:#000;overflow:hidden}
+  .foto img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 1.4s var(--ease)}
+  .foto:hover img{transform:scale(1.03)}
+  .foto-breit{aspect-ratio:21/9;margin:6px 0 2px}
+  .foto-breit img{object-position:62% 46%}
+  @media (max-width:620px){.foto-breit{aspect-ratio:4/3}}
+
+  .probe{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(28px,6vw,72px);align-items:center}
+  @media (max-width:820px){.probe{grid-template-columns:1fr}}
+  .probe .foto{aspect-ratio:4/3}
+
   .rise{transform:translateY(16px);transition:transform .8s var(--ease)}
   .rise.seen{transform:none}
 
   a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rise{transform:none}.hero-title .line-in{transform:none}.hero{height:auto}.hero-sticky{position:relative}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rise{transform:none}.hero-title .line-in{transform:none}}
 </style>
-
-<script src="../assets/js/vendor/three.min.js?v=20261006-2027"></script>
 
 </head>
 <body>
@@ -232,28 +249,25 @@
 </nav>
 
 <header class="hero" id="top">
-  <div class="hero-sticky">
-    <canvas class="hero-canvas" id="crystal" aria-hidden="true"></canvas>
-    <div class="dune" aria-hidden="true"></div>
-    <div class="dune-ridge" aria-hidden="true"></div>
-
-
-    <div class="wrap">
-      <h1 class="hero-title">
-        <span class="line"><span class="line-in">Scan</span></span>
-        <span class="line"><span class="line-in"><span class="em">Click</span></span></span>
-        <span class="line"><span class="line-in">Connect</span></span>
-      </h1>
-      <div class="hero-cta">
-        <a class="btn btn-solid" href="#kontakt"><span>Karte anfragen</span><span aria-hidden="true">→</span></a>
-        <a class="btn btn-ghost" href="#arbeitsprobe"><span>Karte ausprobieren</span></a>
-      </div>
+  <div class="wrap">
+    <h1 class="hero-title">
+      <span class="line"><span class="line-in">Scan</span></span>
+      <span class="line"><span class="line-in"><span class="em">Click</span></span></span>
+      <span class="line"><span class="line-in">Connect</span></span>
+    </h1>
+    <div class="hero-cta">
+      <a class="btn btn-solid" href="#kontakt"><span>Karte anfragen</span><span aria-hidden="true">→</span></a>
+      <a class="btn btn-ghost" href="#arbeitsprobe"><span>Karte ausprobieren</span></a>
     </div>
-
-    <p class="hud hud-bl" aria-hidden="true">Eine Ansprechpartnerin<br>Von den Daten bis zur fertigen Karte</p>
-    <p class="hud hud-br" aria-hidden="true">Index 00 / 06<br>© 2026</p>
-    <div class="hero-grain"></div>
   </div>
+
+  <figure class="hero-bild">
+    <img src="./bilder/karte-1536.webp" srcset="./bilder/karte-800.webp 800w, ./bilder/karte-1536.webp 1536w" sizes="(max-width:720px) 150vw, min(100vw, 125vh, 1180px)" width="1536" height="1024" alt="Schwarze NFC-Karte mit weißem Kristall-Zeichen, aufgestellt auf einer spiegelnden Fläche" fetchpriority="high">
+  </figure>
+
+  <p class="hud hud-bl" aria-hidden="true">Eine Ansprechpartnerin<br>Von den Daten bis zur fertigen Karte</p>
+  <p class="hud hud-br" aria-hidden="true">Index 00 / 06<br>© 2026</p>
+  <div class="hero-grain"></div>
 </header>
 
 <main>
@@ -365,11 +379,18 @@
   <section class="band" id="arbeitsprobe">
     <div class="wrap">
       <div class="sec-head"><span class="eyebrow">03 / Arbeitsprobe</span></div>
-      <p class="lead">Probieren Sie es am Handy</p>
-      <p class="intro-text">Eine echte Karte, wie sie ein Kunde bekommt. Öffnen Sie den Link am besten mit dem Telefon — dann funktioniert auch das Speichern ins Adressbuch.</p>
+      <div class="probe">
+        <div>
+          <p class="lead">Probieren Sie es am Handy</p>
+          <p class="intro-text">Eine echte Karte, wie sie ein Kunde bekommt. Öffnen Sie den Link am besten mit dem Telefon — dann funktioniert auch das Speichern ins Adressbuch.</p>
 
-      <div class="hero-cta" style="justify-content:flex-start;margin-top:6px">
-        <a class="btn btn-solid" href="https://kira-moewes.github.io/k/kira/" target="_blank" rel="noopener"><span>Visitenkarte ansehen</span><span aria-hidden="true">→</span></a>
+          <div class="hero-cta" style="justify-content:flex-start;margin-top:6px">
+            <a class="btn btn-solid" href="https://kira-moewes.github.io/k/kira/" target="_blank" rel="noopener"><span>Visitenkarte ansehen</span><span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+        <figure class="foto rise">
+          <img src="./bilder/karte-handy-1536.webp" srcset="./bilder/karte-handy-800.webp 800w, ./bilder/karte-handy-1536.webp 1448w" sizes="(max-width:820px) 100vw, 640px" width="1448" height="1086" loading="lazy" alt="Eine Hand hält die schwarze Karte an die Rückseite eines Smartphones">
+        </figure>
       </div>
     </div>
   </section>
@@ -378,6 +399,10 @@
     <div class="wrap">
       <div class="sec-head"><span class="eyebrow">04 / Qualität</span></div>
       <p class="lead">Prüfen Sie es selbst nach</p>
+
+      <figure class="foto foto-breit rise">
+        <img src="./bilder/karte-detail-1536.webp" srcset="./bilder/karte-detail-800.webp 800w, ./bilder/karte-detail-1536.webp 1536w" sizes="(max-width:1200px) 100vw, 1104px" width="1536" height="1024" loading="lazy" alt="Nahaufnahme der Kartenoberfläche mit dem Kristall-Zeichen">
+      </figure>
 
       <div class="grid4">
         <div class="cell rise"><span class="n">Punkt 01</span><h3>Ladezeit</h3><p>Die Seite ist da, bevor Sie zu scrollen anfangen. Keine fremden Skripte, keine schweren Bilddateien.</p></div>
@@ -439,21 +464,12 @@
 <script>
 (function(){
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var hero = document.querySelector('.hero');
 
   /* Fortschrittslinie */
   var bar = document.getElementById('progress');
   function onScroll(){
     var max = document.body.scrollHeight - innerHeight;
     bar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + '%';
-    var hp = heroProgress();
-    hero.style.setProperty('--hp', hp.toFixed(4));
-  }
-  function heroProgress(){
-    if (!hero) return 0;
-    var span = hero.offsetHeight - innerHeight;
-    if (span <= 0) return 0;
-    return Math.min(Math.max(-hero.getBoundingClientRect().top / span, 0), 1);
   }
   addEventListener('scroll', onScroll, {passive:true});
   onScroll();
@@ -488,136 +504,6 @@
   }, {rootMargin:'0px 0px -8% 0px'});
   document.querySelectorAll('.rise').forEach(function(el){ io.observe(el); });
 
-  /* ---------- Die Kugel ---------- */
-  if (typeof THREE === 'undefined') return;
-  var cv = document.getElementById('crystal');
-  var mobile = innerWidth < 720;
-  var dpr = Math.min(devicePixelRatio || 1, 2);
-
-  var renderer = new THREE.WebGLRenderer({canvas:cv, antialias:!mobile, alpha:true});
-  renderer.setPixelRatio(dpr);
-  var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(45, 1, .1, 100);
-
-  /* Facettenkörper mit Fresnel-Rand — in Amanas Farben */
-  var shell = new THREE.ShaderMaterial({
-    transparent:true, depthWrite:false, side:THREE.DoubleSide,
-    uniforms:{
-      uBase:{value:new THREE.Color(0xD95F1E)},
-      uDeep:{value:new THREE.Color(0x4A1C08)},
-      uRim:{value:new THREE.Color(0xFFC46B)},
-      uOpacity:{value:1}
-    },
-    vertexShader:[
-      'varying vec3 vNormal;','varying vec3 vView;','varying vec3 vPos;',
-      'void main(){',
-      '  vNormal = normalize(normalMatrix * normal);',
-      '  vec4 mv = modelViewMatrix * vec4(position,1.0);',
-      '  vView = normalize(-mv.xyz);','  vPos = position;',
-      '  gl_Position = projectionMatrix * mv;','}'
-    ].join('\n'),
-    fragmentShader:[
-      'uniform vec3 uBase;','uniform vec3 uDeep;','uniform vec3 uRim;','uniform float uOpacity;',
-      'varying vec3 vNormal;','varying vec3 vView;','varying vec3 vPos;',
-      'void main(){',
-      '  vec3 n = normalize(vNormal);',
-      '  float fres = pow(1.0 - abs(dot(n, normalize(vView))), 2.2);',
-      '  float depth = smoothstep(-1.6, 1.6, vPos.y);',
-      '  float facet = pow(0.5 + 0.5 * dot(n, normalize(vec3(0.4,0.9,0.6))), 1.6);',
-      '  vec3 col = mix(uDeep, uBase, depth * 0.45 + facet * 0.55);',
-      '  col = mix(col, uRim, fres);',
-      '  float a = (0.22 + facet * 0.16 + fres * 0.66) * uOpacity;',
-      '  gl_FragColor = vec4(col, a);','}'
-    ].join('\n')
-  });
-
-  var body = new THREE.Mesh(new THREE.IcosahedronGeometry(1.5, 0), shell);
-  var wireMat = new THREE.LineBasicMaterial({color:0xF68A0A, transparent:true, opacity:.42});
-  var wire = new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(1.5, 0)), wireMat);
-  var innerMat = new THREE.LineBasicMaterial({color:0xFFC46B, transparent:true, opacity:.16});
-  var inner = new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(.82, 0)), innerMat);
-
-  var group = new THREE.Group();
-  group.add(body, wire, inner);
-  scene.add(group);
-
-  /* Sandstaub */
-  var count = mobile ? 110 : 240;
-  var pos = new Float32Array(count * 3), speed = new Float32Array(count);
-  for (var i = 0; i < count; i++){
-    pos[i*3]   = (Math.random() - .5) * 12;
-    pos[i*3+1] = (Math.random() - .5) * 8;
-    pos[i*3+2] = (Math.random() - .5) * 6 - 1;
-    speed[i]   = .05 + Math.random() * .22;
-  }
-  var pGeo = new THREE.BufferGeometry();
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  var pMat = new THREE.ShaderMaterial({
-    transparent:true, depthWrite:false,
-    uniforms:{uDpr:{value:dpr}},
-    vertexShader:[
-      'uniform float uDpr;',
-      'void main(){',
-      '  vec4 mv = modelViewMatrix * vec4(position,1.0);',
-      '  gl_PointSize = (36.0 / -mv.z) * uDpr * 0.35;',
-      '  gl_Position = projectionMatrix * mv;','}'
-    ].join('\n'),
-    fragmentShader:[
-      'void main(){',
-      '  float d = length(gl_PointCoord - 0.5);',
-      '  float a = smoothstep(0.5, 0.05, d) * 0.42;',
-      '  gl_FragColor = vec4(1.0, 0.77, 0.42, a);','}'
-    ].join('\n')
-  });
-  scene.add(new THREE.Points(pGeo, pMat));
-
-  function resize(){
-    var w = cv.clientWidth || cv.parentElement.clientWidth;
-    var h = cv.clientHeight || cv.parentElement.clientHeight;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.position.z = w < 720 ? 8.4 : 6;
-    camera.updateProjectionMatrix();
-  }
-  resize();
-  addEventListener('resize', resize);
-
-  var px = 0, py = 0, tx = 0, ty = 0;
-  if (!mobile) addEventListener('pointermove', function(e){
-    tx = (e.clientX / innerWidth - .5) * 2;
-    ty = (e.clientY / innerHeight - .5) * 2;
-  }, {passive:true});
-
-  var visible = true;
-  if ('IntersectionObserver' in window){
-    new IntersectionObserver(function(e){ visible = e[0].isIntersecting; }).observe(cv);
-  }
-
-  var clock = new THREE.Clock();
-  function frame(){
-    var t = clock.getElapsedTime(), hp = heroProgress();
-    group.rotation.y = t * .12 + hp * 2.4 + px * .22;
-    group.rotation.x = .42 + Math.sin(t * .18) * .05 + hp * .5 + py * .14;
-    inner.rotation.y = -t * .2 - hp * 1.2;
-    inner.rotation.z = t * .08;
-    var s = .74 + hp * .5;
-    group.scale.set(s, s, s);
-    group.position.y = Math.sin(t * .4) * .06 + hp * .9;
-    shell.uniforms.uOpacity.value = 1 - Math.max(0, hp - .72) / .28;
-    wireMat.opacity = .42 * (1 - hp * .5);
-
-    var arr = pGeo.attributes.position.array;
-    for (var j = 0; j < count; j++){
-      arr[j*3+1] += speed[j] * .004;
-      if (arr[j*3+1] > 4.2) arr[j*3+1] = -4.2;
-    }
-    pGeo.attributes.position.needsUpdate = true;
-
-    px += (tx - px) * .04;
-    py += (ty - py) * .04;
-    renderer.render(scene, camera);
-  }
-  renderer.setAnimationLoop(function(){ if (visible && !document.hidden) frame(); });
 })();
 </script>
 
