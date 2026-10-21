@@ -16,7 +16,10 @@
              hier zuerst vorkommen.
      jahr    erscheint klein über dem Titel
      satz    zwei bis drei Wörter, was es ist. Kein Satz, keine Erklärung.
-     label   "Entwurf" oder ""
+     label   "Entwurf", "Demo-Unternehmen" oder ""
+             "Demo-Unternehmen" steht dort, wo der Betrieb
+             erfunden ist und niemand denken soll, es wäre
+             ein echter Auftrag gewesen.
      ziel    Adresse der Arbeit, relativ zu diesem Ordner. Fremde Adressen
              (mit https) öffnen von allein in einem neuen Tab.
      art     nur zur eigenen Ordnung, steht nicht auf der Seite
@@ -40,7 +43,7 @@ window.PROJEKTE = [
     art:     "Website",
     jahr:    "2026",
     satz:    "Erwachsenwerden, aber machbar",
-    label:   "Entwurf",
+    label:   "Demo-Unternehmen",
     ziel:    "https://startklar-six.vercel.app/"
   },
 
@@ -96,7 +99,7 @@ window.PROJEKTE = [
     art:     "Marke",
     jahr:    "2026",
     satz:    "Erfundene Marke",
-    label:   "Entwurf",
+    label:   "Demo-Unternehmen",
     ziel:    "https://kira-moewes.github.io/webgewerk-agenten/"
   }
 
