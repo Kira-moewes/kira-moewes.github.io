@@ -6,33 +6,58 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Kira Moewes — Arbeiten</title>
 <meta name="description" content="Websites, digitale Visitenkarten und Designstudien von Kira Moewes.">
-<link rel="stylesheet" href="../assets/fonts/amana.css?v=20261011-1349">
-<link rel="stylesheet" href="./portfolio.css?v=20261011-1349">
+<link rel="stylesheet" href="../assets/fonts/amana.css?v=20261021-0859">
+<link rel="stylesheet" href="./portfolio.css?v=20261021-0859">
+<script src="../assets/js/vendor/three.min.js?v=20261021-0859"></script>
 </head>
 <body>
 
-<header class="kopf">
-  <div class="wrap">
-    <p class="eyebrow">Kira Moewes</p>
-    <h1>Was ich<br>gebaut <span class="em">habe</span></h1>
+<div id="progress"></div>
+
+<nav>
+  <a class="mark" href="#top">Kira Moewes</a>
+  <ul>
+    <li><a class="nl" href="#arbeiten">Arbeiten</a></li>
+    <li><a class="nl" href="#kontakt">Kontakt</a></li>
+  </ul>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-sticky">
+    <canvas class="hero-canvas" id="crystal" aria-hidden="true"></canvas>
+    <div class="dune" aria-hidden="true"></div>
+    <div class="dune-ridge" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <p class="hero-eyebrow" data-scramble>Kira Moewes</p>
+      <h1 class="hero-title">
+        <span class="line"><span class="line-in">Was ich</span></span>
+        <span class="line"><span class="line-in">gebaut</span></span>
+        <span class="line"><span class="line-in"><span class="em">habe</span></span></span>
+      </h1>
+      <div class="hero-cta">
+        <a class="btn btn-solid" href="#arbeiten"><span>Arbeiten ansehen</span><span aria-hidden="true">→</span></a>
+        <a class="btn btn-ghost" href="#kontakt"><span>Kontakt</span></a>
+      </div>
+    </div>
+
+    <p class="hud hud-bl" id="hud-bl" aria-hidden="true"></p>
+    <p class="hud hud-br" id="hud-br" aria-hidden="true">© 2026</p>
+    <div class="hero-grain"></div>
   </div>
 </header>
 
-
 <main>
-  <section class="arbeiten">
-    <div class="wrap">
-      <div id="arbeiten"></div>
-    </div>
-  </section>
+  <div id="arbeiten"></div>
 
-  <section class="kontakt">
+  <section class="band cta-band" id="kontakt">
     <div class="wrap">
-      <p class="eyebrow">Kontakt</p>
+      <div class="sec-head"><span class="eyebrow">Kontakt</span></div>
       <h2>Sie brauchen auch<br>eine Website?</h2>
-      <a class="btn" href="mailto:kira.moewes@gmail.com?subject=Anfrage%20über%20das%20Portfolio">
+      <a class="btn btn-solid" href="mailto:kira.moewes@gmail.com?subject=Anfrage%20über%20das%20Portfolio">
         <span>Schreiben Sie mir</span><span aria-hidden="true">→</span>
       </a>
+      <p class="adresse">Oder direkt an <a href="mailto:kira.moewes@gmail.com?subject=Anfrage%20über%20das%20Portfolio">kira.moewes@gmail.com</a></p>
     </div>
   </section>
 
@@ -40,13 +65,14 @@
     <p>
       <a href="../amana/impressum.html">Impressum</a> ·
       <a href="../amana/datenschutz.html">Datenschutz</a> ·
-      <a href="#">Nach oben</a>
+      <a href="#top">Nach oben</a>
     </p>
   </footer>
 </main>
 
-<script src="./projekte.js?v=20261011-1349"></script>
-<script src="./portfolio.js?v=20261011-1349"></script>
+<script src="./projekte.js?v=20261021-0859"></script>
+<script src="./portfolio.js?v=20261021-0859"></script>
+<script src="./bewegung.js?v=20261021-0859"></script>
 
 </body>
 </html>

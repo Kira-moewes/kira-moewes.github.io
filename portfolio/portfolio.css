@@ -1,9 +1,10 @@
 /* ===========================================================================
    Portfolio – Kira Moewes
-   Farben, Schriften und Rasterform sind aus der Amana-Seite uebernommen,
-   damit beide Seiten wie eine Handschrift wirken. Absichtlich eine eigene
-   Datei und keine gemeinsame: amana/index.html wird aus der Artefakt-Fassung
-   erzeugt, eine geteilte Datei wuerde bei jedem Neubau ueberschrieben.
+   Design und Bewegung sind aus der Amana-Seite uebernommen: Navigation,
+   Fortschrittslinie, Hero mit Kugel und Duene, Baender, Kacheln. Werte
+   bewusst gleich gehalten, damit beide Seiten wie eine Handschrift wirken.
+   Absichtlich eine eigene Datei und keine gemeinsame: amana/index.html hat
+   sein CSS eingebettet und wird von Hand gepflegt.
 =========================================================================== */
 :root{
   --void:#0A0503; --ember:#150B06; --char:#241108; --line:#32180C;
@@ -12,6 +13,7 @@
 
   --wrap:1200px;
   --pad:clamp(1.25rem,4vw,3rem);
+  --nav-h:64px;
   --ease:cubic-bezier(.22,1,.36,1);
 
   --display:'Archivo','Helvetica Neue',system-ui,sans-serif;
@@ -32,67 +34,102 @@ body{
   text-transform:uppercase;color:var(--faint);margin:0;
 }
 
-/* ---------- Kopf ---------- */
-.kopf{
-  position:relative;overflow:hidden;isolation:isolate;
-  padding:clamp(72px,14vh,132px) 0 clamp(40px,7vw,64px);
+#progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;background:linear-gradient(90deg,var(--rust),var(--gold),var(--halo));transition:width .08s linear}
+
+/* ---------- Navigation ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);background:linear-gradient(180deg,rgba(10,5,3,.9),rgba(10,5,3,0));animation:page-in .9s var(--ease) both}
+nav .mark{font-family:var(--display);font-stretch:125%;font-weight:500;font-size:13px;letter-spacing:.5em;text-transform:uppercase;color:var(--text);text-decoration:none}
+nav ul{display:flex;gap:clamp(14px,2.6vw,32px);list-style:none;margin:0;padding:0}
+nav a.nl{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;position:relative;padding-bottom:4px;transition:color .3s var(--ease)}
+nav a.nl::after{content:"";position:absolute;left:0;bottom:0;height:1px;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .4s var(--ease)}
+nav a.nl:hover,nav a.nl:focus-visible{color:var(--halo)}
+nav a.nl:hover::after,nav a.nl:focus-visible::after{transform:scaleX(1);transform-origin:left}
+@media (max-width:680px){nav ul{display:none}}
+
+/* ---------- Hero mit Kugel ---------- */
+.hero{position:relative;height:190vh}
+.hero-sticky{
+  position:sticky;top:0;height:100svh;min-height:560px;
+  display:flex;flex-direction:column;justify-content:center;
+  overflow:hidden;isolation:isolate;
   background:
-    radial-gradient(70vw 46vw at 22% 8%, rgba(246,138,10,.13), transparent 62%),
-    linear-gradient(196deg,#140D0B 0%,#1A1210 46%,#0A0503 100%);
+    radial-gradient(60vw 50vw at 50% 34%, rgba(246,138,10,.16), transparent 64%),
+    linear-gradient(200deg,#140D0B 0%,#1C1310 52%,#0A0503 100%);
 }
-.kopf::after{
-  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
-  background-image:var(--grain);opacity:.22;mix-blend-mode:soft-light;
-}
-.kopf .wrap{position:relative;z-index:3}
-.kopf h1{
-  font-family:var(--display);font-stretch:125%;font-weight:300;
-  font-size:clamp(2.1rem,7vw,4.4rem);line-height:1.08;letter-spacing:.16em;
-  text-transform:uppercase;margin:clamp(1rem,2.4vw,1.6rem) 0 clamp(.4rem,1vw,.8rem);
-}
-.kopf h1 .em{color:var(--halo)}
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
 
-/* ---------- Bereiche: die grosse Ebene ----------
-   Der Bereich muss auf einen Blick ueber den Schwerpunkten stehen. Das macht
-   hier die Groesse zusammen mit der kraeftigen Linie darueber - nicht eine
-   zweite Farbe, davon hat die Seite schon genug. */
-.bereich + .bereich{margin-top:clamp(64px,10vw,120px)}
-.bereich-titel{
-  margin:0 0 clamp(28px,4vw,44px);padding-top:clamp(18px,2.5vw,26px);
-  border-top:2px solid var(--rust);
-  font-family:var(--display);font-stretch:125%;font-weight:300;
-  font-size:clamp(26px,5.2vw,46px);letter-spacing:.14em;text-transform:uppercase;
-  color:var(--text);
-}
+/* Duenenkante als Boden unter der Kugel */
+.dune,.dune-ridge{position:absolute;z-index:2;width:220%;height:150%;left:-60%;top:74%;border-radius:56% 44% 0 0 / 46% 40% 0 0;transform:rotate(-4deg);pointer-events:none}
+.dune{background:linear-gradient(168deg,#B94F1B 0%,#8E3510 40%,#4A1F0C 74%,#1A0B04 100%)}
+.dune-ridge{box-shadow:inset 0 2px 0 0 rgba(255,196,107,.45)}
 
-/* ---------- Abschnitte ---------- */
-.gruppe + .gruppe{margin-top:clamp(44px,7vw,76px)}
+.hud{position:absolute;z-index:4;font-family:var(--mono);font-size:10px;line-height:1.7;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0}
+.hud-bl{bottom:22px;left:var(--pad)}
+.hud-br{bottom:22px;right:var(--pad);text-align:right}
+.hud{opacity:calc(1 - var(--hp,0) * 2.5)}
+
+.hero .wrap{position:relative;z-index:5;text-align:center;padding-top:calc(var(--nav-h) + 1.5rem)}
+
+.hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin:0 0 clamp(1.4rem,3vw,2.4rem)}
+.hero-title{
+  font-family:var(--display);font-stretch:125%;font-weight:300;
+  font-size:clamp(2.6rem,7.6vw,6rem);line-height:1.18;letter-spacing:.34em;
+  text-transform:uppercase;max-width:none;margin:0 auto;text-indent:.34em;
+}
+.hero-title .line{display:block;overflow:hidden}
+.hero-title .line-in{display:inline-block;transform:translateY(112%);animation:line-rise 1.05s var(--ease) forwards}
+.hero-title .line:nth-child(2) .line-in{animation-delay:.09s}
+.hero-title .line:nth-child(3) .line-in{animation-delay:.18s}
+.hero-title .em{color:var(--halo)}
+@media (max-width:420px){.hero-title{font-size:clamp(2rem,6.4vw,2.6rem);letter-spacing:.24em;text-indent:.24em}}
+@keyframes line-rise{to{transform:none}}
+
+.hero-cta{margin-top:clamp(2.2rem,5vw,3.4rem);display:flex;justify-content:center;gap:14px;flex-wrap:wrap;animation:page-in 1s var(--ease) .5s both}
+
+.btn{display:inline-flex;align-items:center;gap:.75em;padding:.95em 1.7em;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;position:relative;overflow:hidden;transition:color .4s var(--ease),border-color .4s var(--ease)}
+.btn span{position:relative;z-index:1}
+.btn::before{content:"";position:absolute;inset:0;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.btn:hover::before,.btn:focus-visible::before{transform:scaleX(1)}
+.btn-solid{color:var(--text);border:1px solid var(--rust)}
+.btn-solid::before{background:var(--rust)}
+.btn-solid:hover,.btn-solid:focus-visible{color:#FFF3E2;border-color:var(--gold)}
+.btn-ghost{color:var(--muted);border:1px solid var(--line)}
+.btn-ghost::before{background:rgba(217,95,30,.16)}
+.btn-ghost:hover,.btn-ghost:focus-visible{color:var(--halo);border-color:var(--rust)}
+
+.hero-grain{position:absolute;inset:0;z-index:6;pointer-events:none;background-image:var(--grain);opacity:.24;mix-blend-mode:soft-light}
+
+@keyframes page-in{from{opacity:0;transform:translateY(14px)}}
+
+/* ---------- Baender ---------- */
+section.band{padding:clamp(72px,10vw,128px) 0;border-top:1px solid var(--char);background:var(--void);position:relative;z-index:10}
+.sec-head{margin-bottom:26px}
+.lead{max-width:22ch;font-family:var(--display);font-stretch:118%;font-weight:300;font-size:clamp(24px,4.6vw,44px);letter-spacing:.09em;text-transform:uppercase;line-height:1.1;margin:0 0 24px;text-wrap:balance;color:var(--text)}
+
+/* Schwerpunkte innerhalb eines Bereichs */
+.gruppe{margin-top:clamp(36px,5vw,52px)}
+.gruppe + .gruppe{margin-top:clamp(56px,8vw,80px)}
 .gruppe-titel{
-  /* Haarlinie und Abstand sassen vorher an der Zeile darunter; die ist
-     entfallen, also tragen sie jetzt die Ueberschrift. */
-  margin:0 0 20px;padding-bottom:14px;border-bottom:1px solid var(--line);
-  font-family:var(--display);font-stretch:120%;font-weight:400;
-  font-size:clamp(17px,2.6vw,24px);letter-spacing:.18em;text-transform:uppercase;
-  color:var(--halo);
+  margin:0 0 18px;padding-bottom:14px;border-bottom:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--gold);
 }
 
-/* ---------- Projektraster ---------- */
-.arbeiten{padding:clamp(40px,7vw,72px) 0 clamp(64px,10vw,110px)}
-.raster{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
-  gap:2px;background:var(--line);border:1px solid var(--line);
-}
+/* ---------- Kacheln, gebaut wie die Zellen der Amana-Seite ---------- */
+.raster{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+/* Die Linien zwischen den Kacheln zieht jede Kachel selbst, statt dass der
+   Rasterhintergrund durch die Fugen scheint. Sonst stehen leere Plaetze in
+   der letzten Reihe als brauner Block da und sehen aus wie ein Fehler.
+   Der negative Rand legt benachbarte Linien uebereinander. */
+.raster > .kachel:only-child{grid-column:1/-1}
 .kachel{
-  background:var(--ember);padding:26px 24px 30px;
-  display:flex;flex-direction:column;gap:10px;
+  background:var(--ember);padding:26px 22px 30px;
+  border:1px solid var(--line);margin:0 -1px -1px 0;
+  display:flex;flex-direction:column;
   text-decoration:none;color:inherit;position:relative;
   transition:background .5s var(--ease);
 }
 .kachel:hover,.kachel:focus-visible{background:#1E0F08}
-/* Steht in einem Abschnitt nur eine Kachel, nimmt sie die ganze Reihe. Sonst
-   bleiben die leeren Spalten als brauner Block daneben stehen und sehen aus
-   wie ein Fehler. */
-.raster > .kachel:only-child{grid-column:1/-1}
 .kachel::after{
   content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;
   background:var(--gold);transform:scaleX(0);transform-origin:left;
@@ -102,73 +139,45 @@ body{
 
 .kachel .zeile{
   display:flex;align-items:baseline;justify-content:space-between;gap:12px;
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  margin-bottom:14px;
 }
-.kachel .jahr{color:var(--gold)}
-.kachel .label{color:var(--faint);border:1px solid var(--line);padding:2px 7px;white-space:nowrap}
-.kachel h2{
+.kachel .jahr{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.14em}
+.kachel .label{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);border:1px solid var(--rust);padding:3px 7px;white-space:nowrap}
+.kachel h4{
   font-family:var(--display);font-stretch:120%;font-weight:400;
-  font-size:clamp(15px,1.9vw,17px);letter-spacing:.14em;text-transform:uppercase;
-  margin:6px 0 0;line-height:1.3;
+  font-size:14.5px;letter-spacing:.16em;text-transform:uppercase;
+  margin:0 0 10px;line-height:1.4;
 }
-.kachel p{margin:0;color:var(--muted);font-size:14.5px;flex:1}
+.kachel p{margin:0 0 22px;color:var(--muted);font-size:14px}
+/* Fuss der Kachel: an die Unterkante geschoben, damit er in allen Kacheln
+   einer Reihe auf derselben Hoehe sitzt. */
 .kachel .oeffnen{
-  font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
-  color:var(--text);display:inline-flex;align-items:center;gap:.6em;margin-top:6px;
+  display:flex;align-items:center;gap:.6em;margin-top:auto;padding-top:16px;
+  border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--text);transition:color .4s var(--ease);
 }
 .kachel:hover .oeffnen,.kachel:focus-visible .oeffnen{color:var(--halo)}
 
-.leer{
-  grid-column:1/-1;background:var(--ember);padding:44px 24px;text-align:center;
-  color:var(--muted);font-size:15px;
-}
+.leer{background:var(--ember);border:1px solid var(--line);padding:44px 24px;text-align:center;color:var(--muted);font-size:15px;margin:0}
 
-/* ---------- Hinweis und Kontakt ---------- */
-.hinweis{
-  margin-top:2px;background:var(--ember);border:1px solid var(--line);
-  padding:22px 24px;color:var(--muted);font-size:14.5px;
-}
-.hinweis b{color:var(--text);font-weight:500}
+/* ---------- Kontakt ---------- */
+.cta-band h2{font-family:var(--display);font-stretch:125%;font-weight:300;font-size:clamp(26px,5.6vw,60px);letter-spacing:.13em;text-transform:uppercase;margin:0 0 32px;text-wrap:balance;color:var(--text)}
+/* Die Adresse steht zusaetzlich als lesbarer Text da: ein mailto-Link
+   oeffnet auf Rechnern ohne eingerichtetes Mailprogramm gar nichts, und
+   dann wirkt der Knopf kaputt. So kann man sie immer kopieren. */
+.adresse{margin:22px 0 0;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.adresse a{color:var(--halo);text-decoration:none;border-bottom:1px solid rgba(255,196,107,.3)}
+.adresse a:hover{border-bottom-color:var(--halo)}
 
-.kontakt{border-top:1px solid var(--char);padding:clamp(56px,9vw,96px) 0}
-.kontakt h2{
-  font-family:var(--display);font-stretch:125%;font-weight:300;
-  font-size:clamp(24px,5vw,44px);letter-spacing:.13em;text-transform:uppercase;
-  margin:18px 0 clamp(28px,4vw,40px);text-wrap:balance;
-}
-/* Der Absatz zwischen Ueberschrift und Knopf ist entfallen; der Abstand
-   sitzt jetzt unter der Ueberschrift, damit der Knopf nicht klebt. */
-.kontakt p{max-width:56ch;color:var(--muted);margin:0 0 28px}
-.btn{
-  display:inline-flex;align-items:center;gap:.75em;padding:.95em 1.7em;
-  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;
-  text-transform:uppercase;text-decoration:none;position:relative;overflow:hidden;
-  color:var(--text);border:1px solid var(--rust);
-  transition:color .4s var(--ease),border-color .4s var(--ease);
-}
-.btn span{position:relative;z-index:1}
-.btn::before{
-  content:"";position:absolute;inset:0;background:var(--rust);
-  transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease);
-}
-.btn:hover::before,.btn:focus-visible::before{transform:scaleX(1)}
-.btn:hover,.btn:focus-visible{color:#FFF3E2;border-color:var(--gold)}
-
-footer{
-  border-top:1px solid var(--char);padding:30px 0 56px;
-  display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;
-}
-footer p{
-  margin:0;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--faint);
-}
+footer{border-top:1px solid var(--char);padding:32px 0 60px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;background:var(--void);position:relative;z-index:10}
+footer p{margin:0;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
 footer a{color:var(--faint);text-decoration:none;transition:color .3s var(--ease)}
 footer a:hover{color:var(--halo)}
 
-a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+/* Kacheln steigen beim Scrollen leicht auf - wie auf der Amana-Seite */
+.rise{transform:translateY(16px);transition:transform .8s var(--ease),background .5s var(--ease)}
+.rise.seen{transform:none}
 
-/* Bewusst ohne Einblenden beim Scrollen: die Kacheln stehen sofort da.
-   Farbwechsel beim Zeigen bleibt - das ist Rueckmeldung, keine Animation. */
-@media (prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
-}
+a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rise{transform:none}.hero-title .line-in{transform:none}.hero{height:auto}.hero-sticky{position:relative}}

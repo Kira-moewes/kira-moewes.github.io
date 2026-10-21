@@ -20,12 +20,12 @@
     /* Zeigt das Ziel auf eine fremde Adresse, oeffnet es in einem neuen Tab -
        sonst ist das Portfolio weg und der Besucher kommt nicht zurueck. */
     var fremd = /^https?:/i.test(p.ziel || "");
-    return '<a class="kachel" href="' + esc(p.ziel || "#") + '"' +
+    return '<a class="kachel rise" href="' + esc(p.ziel || "#") + '"' +
              (fremd ? ' target="_blank" rel="noopener"' : '') + '>' +
              '<span class="zeile">' +
                '<span class="jahr">' + esc(p.jahr || "") + '</span>' + label +
              '</span>' +
-             '<h2>' + esc(p.titel) + '</h2>' +
+             '<h4>' + esc(p.titel) + '</h4>' +
              '<p>' + esc(p.satz || "") + '</p>' +
              '<span class="oeffnen">Ansehen <span aria-hidden="true">&rarr;</span></span>' +
            '</a>';
@@ -53,8 +53,13 @@
     return '<div class="raster">' + liste.map(kachel).join("") + '</div>';
   }
 
+  function zwei(n) { return (n < 10 ? "0" : "") + n; }
+
+  /* Jeder Bereich ist ein eigenes Band wie die Abschnitte der Amana-Seite,
+     mit laufender Nummer in der Augenbraue: "01 / Arbeiten". Der Name des
+     Bereichs steht gross darunter und nicht noch einmal in der Augenbraue. */
   ziel.innerHTML = bereiche.length
-    ? bereiche.map(function (b) {
+    ? bereiche.map(function (b, i) {
         var inhalt = nach[b].reihenfolge.map(function (g) {
           if (!g) return raster(nach[b].gruppen[g]);
           return '<section class="gruppe">' +
@@ -62,10 +67,20 @@
                    raster(nach[b].gruppen[g]) +
                  '</section>';
         }).join("");
-        return '<section class="bereich">' +
-                 '<h2 class="bereich-titel">' + esc(b) + '</h2>' +
-                 inhalt +
+        return '<section class="band bereich">' +
+                 '<div class="wrap">' +
+                   '<div class="sec-head"><span class="eyebrow">' + zwei(i + 1) + ' / Arbeiten</span></div>' +
+                   '<h2 class="lead">' + esc(b) + '</h2>' +
+                   inhalt +
+                 '</div>' +
                '</section>';
       }).join("")
-    : '<p class="leer">Hier steht noch keine Arbeit.</p>';
+    : '<section class="band"><div class="wrap"><p class="leer">Hier steht noch keine Arbeit.</p></div></section>';
+
+  /* Kleintext unten im Hero, aus denselben Daten: links die Bereiche und
+     die Zahl der Arbeiten, rechts der Index wie auf der Amana-Seite. */
+  var links = document.getElementById("hud-bl");
+  var rechts = document.getElementById("hud-br");
+  if (links) links.innerHTML = bereiche.map(esc).join(" · ") + "<br>" + projekte.length + " Arbeiten";
+  if (rechts) rechts.innerHTML = "Index 00 / " + zwei(bereiche.length) + "<br>© 2026";
 })();
