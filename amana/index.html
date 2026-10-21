@@ -1,17 +1,23 @@
 <!doctype html>
-<html lang="de">
+<html lang="de" class="js">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Amana — Digitale Visitenkarten und Bewertungskarten</title>
 <meta name="description" content="NFC-Karten mit eigener Seite: Scan, Click, Connect — Kontakt speichern oder bewerten.">
 <meta name="robots" content="noindex,nofollow">
-<link rel="stylesheet" href="../assets/fonts/amana.css?v=20261021-0904">
+<link rel="stylesheet" href="../assets/fonts/amana.css?v=20261021-0914">
 <style>
   :root{
-    --void:#0A0503; --ember:#150B06; --char:#241108; --line:#32180C;
-    --rust:#9F3C12; --flare:#D95F1E; --gold:#F68A0A; --halo:#FFC46B;
-    --text:#E8DDD2; --muted:#9A8578; --faint:#6B584C;
+    /* Farben der Karte: Schwarz, Graphit und Silber. Die Rollen heissen wie
+       vorher, damit die Regeln darunter unveraendert bleiben koennen:
+       rust = dunkles Metall (Rahmen), gold = Silber (Akzent), halo = Weiss. */
+    --void:#050505; --ember:#0D0D0D; --char:#181818; --line:#252525;
+    --rust:#4A4A4A; --flare:#8C8C8C; --gold:#C9C9C6; --halo:#FFFFFF;
+    --text:#E9E9E6; --muted:#9C9C98; --faint:#5E5E5B;
+    --silber:linear-gradient(180deg,#FFFFFF 0%,#D6D6D3 42%,#8E8E8B 100%);
+    /* Die Webstruktur der Karte: feine schraege Faeden */
+    --weave:repeating-linear-gradient(118deg,rgba(255,255,255,.028) 0 1px,transparent 1px 3px),repeating-linear-gradient(28deg,rgba(255,255,255,.012) 0 1px,transparent 1px 4px);
 
     --wrap:1200px;
     --pad:clamp(1.25rem,4vw,3rem);
@@ -31,7 +37,7 @@
 
   #progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;background:linear-gradient(90deg,var(--rust),var(--gold),var(--halo));transition:width .08s linear}
 
-  nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);background:linear-gradient(180deg,rgba(10,5,3,.9),rgba(10,5,3,0));animation:page-in .9s var(--ease) both}
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);background:linear-gradient(180deg,rgba(5,5,5,.92),rgba(5,5,5,0));animation:page-in .9s var(--ease) both}
   nav .mark{font-family:var(--display);font-stretch:125%;font-weight:500;font-size:13px;letter-spacing:.5em;text-transform:uppercase;color:var(--text);text-decoration:none}
   nav ul{display:flex;gap:clamp(14px,2.6vw,32px);list-style:none;margin:0;padding:0}
   nav a.nl{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;position:relative;padding-bottom:4px;transition:color .3s var(--ease)}
@@ -45,11 +51,11 @@
     position:relative;overflow:hidden;isolation:isolate;
     min-height:100svh;padding-bottom:clamp(64px,9vw,96px);
     background:
-      radial-gradient(52vw 34vw at 50% 0%, rgba(246,138,10,.13), transparent 70%),
+      radial-gradient(52vw 34vw at 50% 0%, rgba(255,255,255,.07), transparent 70%),
       #000;
   }
   /* Unterkante laeuft weich in den Seitengrund ueber */
-  .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:120px;z-index:3;pointer-events:none;background:linear-gradient(180deg,rgba(10,5,3,0),var(--void))}
+  .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:120px;z-index:3;pointer-events:none;background:linear-gradient(180deg,rgba(5,5,5,0),var(--void))}
 
   .hud{position:absolute;z-index:4;font-family:var(--mono);font-size:10px;line-height:1.7;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0}
   .hud-bl{bottom:22px;left:var(--pad)}
@@ -81,7 +87,9 @@
   .hero-title .line-in{display:inline-block;transform:translateY(112%);animation:line-rise 1.05s var(--ease) forwards}
   .hero-title .line:nth-child(2) .line-in{animation-delay:.09s}
   .hero-title .line:nth-child(3) .line-in{animation-delay:.18s}
-  .hero-title .em{color:var(--halo)}
+  .hero-title .em{background:linear-gradient(100deg,#B4B4B1 0%,#B4B4B1 42%,#FFFFFF 50%,#B4B4B1 58%,#B4B4B1 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:glanz 7s var(--ease) 1.4s infinite}
+  /* Ein Lichtstreif laeuft ueber das Wort, wie ueber die Kante der Karte */
+  @keyframes glanz{0%{background-position:100% 0}38%,100%{background-position:0 0}}
   @media (max-width:420px){.hero-title{font-size:clamp(2rem,6.4vw,2.6rem);letter-spacing:.24em;text-indent:.24em}}
   @keyframes line-rise{to{transform:none}}
 
@@ -91,11 +99,11 @@
   .btn span{position:relative;z-index:1}
   .btn::before{content:"";position:absolute;inset:0;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
   .btn:hover::before,.btn:focus-visible::before{transform:scaleX(1)}
-  .btn-solid{color:var(--text);border:1px solid var(--rust)}
-  .btn-solid::before{background:var(--rust)}
-  .btn-solid:hover,.btn-solid:focus-visible{color:#FFF3E2;border-color:var(--gold)}
+  .btn-solid{color:var(--text);border:1px solid var(--flare)}
+  .btn-solid::before{background:var(--halo)}
+  .btn-solid:hover,.btn-solid:focus-visible{color:var(--void);border-color:var(--halo)}
   .btn-ghost{color:var(--muted);border:1px solid var(--line)}
-  .btn-ghost::before{background:rgba(217,95,30,.16)}
+  .btn-ghost::before{background:rgba(255,255,255,.07)}
   .btn-ghost:hover,.btn-ghost:focus-visible{color:var(--halo);border-color:var(--rust)}
 
   .hero-grain{position:absolute;inset:0;z-index:6;pointer-events:none;background-image:var(--grain);opacity:.24;mix-blend-mode:soft-light}
@@ -110,7 +118,7 @@
 
   .services{border-top:1px solid var(--line);margin-top:18px}
   .svc{border:0;border-bottom:1px solid var(--line);width:100%;text-align:left;background:transparent;color:inherit;font:inherit;cursor:pointer;display:block;padding:0;position:relative;overflow:hidden}
-  .svc::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,rgba(217,95,30,.16),rgba(217,95,30,0) 62%);transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease)}
+  .svc::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,rgba(255,255,255,.07),rgba(255,255,255,0) 62%);transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease)}
   .svc:hover::before,.svc:focus-visible::before,.svc[aria-expanded="true"]::before{transform:scaleX(1)}
   .svc-row{position:relative;z-index:1;display:flex;align-items:baseline;gap:20px;padding:26px clamp(6px,1.6vw,18px)}
   .svc-row .idx{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.1em;flex:0 0 auto;transition:color .4s var(--ease)}
@@ -126,16 +134,16 @@
 
   /* Immer dabei */
   .always{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2px;background:var(--line);border:1px solid var(--line);margin:6px 0 42px}
-  .always div{background:var(--ember);padding:22px 22px 26px}
+  .always div{background-color:var(--ember);background-image:var(--weave);padding:22px 22px 26px}
   .always h4{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 10px}
   .always p{margin:0;color:var(--muted);font-size:14.5px}
 
   /* Pakete */
   .packs{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line);border:1px solid var(--line)}
   @media (max-width:900px){.packs{grid-template-columns:1fr}}
-  .pack{background:var(--ember);padding:30px 24px 34px;display:flex;flex-direction:column;position:relative}
-  .pack.mid{background:#1C0F08}
-  .pack.draft{background:#130A05}
+  .pack{background-color:var(--ember);background-image:var(--weave);padding:30px 24px 34px;display:flex;flex-direction:column;position:relative}
+  .pack.mid{background-color:#111111}
+  .pack.draft{background-color:#0A0A0A}
   .pack::after{content:"";position:absolute;left:0;top:0;height:2px;width:100%;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
   .pack.seen::after{transform:scaleX(1)}
   .pack.mid::after,.pack.mid.seen::after{transform:scaleX(1)}
@@ -145,7 +153,7 @@
   .pack .flag{position:absolute;top:14px;right:16px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);border:1px solid var(--rust);padding:3px 7px}
   .pack ul{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:13px;border-top:1px solid var(--line);padding-top:20px}
   .pack li{font-size:14px;line-height:1.6;color:var(--muted);padding-left:19px;position:relative}
-  .pack li::before{content:"+";position:absolute;left:0;top:-1px;color:var(--rust);font-family:var(--mono);font-size:13px}
+  .pack li::before{content:"+";position:absolute;left:0;top:-1px;color:var(--flare);font-family:var(--mono);font-size:13px}
   .pack li.inherit{color:var(--text)}
   .pack li.inherit::before{content:"↑";color:var(--gold)}
   .pack li b{color:var(--text);font-weight:500}
@@ -159,9 +167,9 @@
   @media (max-width:620px){.never-row{grid-template-columns:1fr;gap:8px}}
 
   .grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2px;background:var(--line);border:1px solid var(--line);margin-top:18px}
-  .cell{background:var(--ember);padding:26px 22px 30px;position:relative;transition:background .5s var(--ease);
+  .cell{background-color:var(--ember);background-image:var(--weave);padding:26px 22px 30px;position:relative;transition:background-color .5s var(--ease);
     display:flex;flex-direction:column}
-  .cell:hover{background:#1E0F08}
+  .cell:hover{background-color:#141414}
   .cell .n{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.14em;display:block;margin-bottom:14px}
   .cell h3{font-family:var(--display);font-stretch:120%;font-weight:400;font-size:14.5px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 10px}
   .cell p{margin:0;color:var(--muted);font-size:14px}
@@ -188,7 +196,7 @@
 
   .name-grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,6vw,72px);align-items:start}
   @media (max-width:820px){.name-grid{grid-template-columns:1fr}}
-  .arabic{font-size:clamp(56px,11vw,124px);color:var(--rust);line-height:.9;margin:0;direction:rtl}
+  .arabic{padding-top:.2em;font-size:clamp(56px,11vw,124px);background:var(--silber);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:.9;margin:0;direction:rtl}
   .translit{font-family:var(--mono);font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--faint);margin:18px 0 0}
   .name-grid p.body{color:var(--muted);margin:0 0 16px;max-width:56ch;font-size:16px}
   .name-grid p.body strong{color:var(--text);font-weight:500}
@@ -198,7 +206,7 @@
      oeffnet auf Rechnern ohne eingerichtetes Mailprogramm gar nichts, und
      dann wirkt der Knopf kaputt. So kann man sie immer kopieren. */
   .adresse{margin:22px 0 0;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
-  .adresse a{color:var(--halo);text-decoration:none;border-bottom:1px solid rgba(255,196,107,.3)}
+  .adresse a{color:var(--halo);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.3)}
   .adresse a:hover{border-bottom-color:var(--halo)}
 
   .rows{margin-top:46px;display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:28px}
@@ -226,8 +234,53 @@
   .rise{transform:translateY(16px);transition:transform .8s var(--ease)}
   .rise.seen{transform:none}
 
+  /* ================= Das Zeichen der Karte ================= */
+  .zeichen{display:block;overflow:visible;fill:none;stroke:currentColor;stroke-linejoin:round;stroke-linecap:round}
+  .zeichen path{stroke-dasharray:1;stroke-dashoffset:1}
+  .zeichen.gezeichnet path{animation:zeichnen 1.6s var(--ease) forwards}
+  .zeichen.gezeichnet path:nth-child(2){animation-delay:.35s}
+  .zeichen.gezeichnet path:nth-child(3){animation-delay:.7s}
+  @keyframes zeichnen{to{stroke-dashoffset:0}}
+
+  nav .mark{display:inline-flex;align-items:center;gap:14px}
+  nav .mark .zeichen{width:22px;height:22px;stroke-width:6;color:var(--halo)}
+
+  /* Grosses Zeichen im Kontaktband: zeichnet sich beim Hinscrollen,
+     danach atmet ein schwacher Schein dahinter */
+  .cta-band{overflow:hidden}
+  .cta-band .wrap{position:relative}
+  @media (min-width:861px){.cta-band .wrap{padding-right:calc(var(--pad) + clamp(200px,24vw,320px) + 48px)}}
+  .gross{position:absolute;right:var(--pad);top:50%;width:clamp(200px,24vw,320px);height:auto;transform:translateY(-50%);color:var(--halo);stroke-width:.8;opacity:.9;pointer-events:none}
+  .schein{position:absolute;right:calc(var(--pad) - 6vw);top:50%;width:clamp(260px,38vw,520px);aspect-ratio:1;transform:translateY(-50%);border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.08),transparent 62%);animation:atmen 6s ease-in-out infinite;pointer-events:none}
+  @keyframes atmen{50%{opacity:.45;transform:translateY(-50%) scale(.92)}}
+  @media (max-width:860px){.gross{position:relative;right:auto;top:auto;transform:none;width:120px;margin:0 0 34px}.schein{display:none}}
+
+  /* ================= Hero-Karte: Glanz und Neigung ================= */
+  .hero-bild{perspective:1200px}
+  .hero-bild .kippen{transform:rotateX(var(--ry,0deg)) rotateY(var(--rx,0deg));transition:transform .9s var(--ease);will-change:transform}
+  .hero-bild .schweben{animation:schweben 9s ease-in-out 2s infinite}
+  @keyframes schweben{50%{transform:translateY(-10px)}}
+  /* Lichtstreif, der alle paar Sekunden schraeg ueber die Karte zieht.
+     overlay laesst Schwarz schwarz und hellt nur die Struktur auf. */
+  .hero-bild .kippen{position:relative}
+  .hero-bild .kippen::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;
+    background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.55) 48%,rgba(255,255,255,.9) 50%,rgba(255,255,255,.55) 52%,transparent 62%);
+    background-size:300% 100%;background-position:120% 0;animation:streif 8s var(--ease) 2.4s infinite}
+  @keyframes streif{0%{background-position:120% 0}40%,100%{background-position:-20% 0}}
+
+  /* ================= Einblenden beim Scrollen ================= */
+  /* Nur mit JavaScript unsichtbar: ohne Skript steht alles sofort da. */
+  .js .rise{opacity:0;transform:translateY(28px);transition:opacity 1s var(--ease) var(--d,0s),transform 1.1s var(--ease) var(--d,0s),background-color .5s var(--ease)}
+  .js .rise.seen{opacity:1;transform:none}
+  .js .foto.rise img{transform:scale(1.08);transition:transform 1.8s var(--ease)}
+  .js .foto.rise.seen img{transform:none}
+  .js .foto.rise.seen:hover img{transform:scale(1.03)}
+
+  .js .lead{clip-path:inset(0 0 100% 0);transform:translateY(12px);transition:clip-path 1.1s var(--ease),transform 1.1s var(--ease)}
+  .js .lead.seen{clip-path:inset(0 0 -10% 0);transform:none}
+
   a:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rise{transform:none}.hero-title .line-in{transform:none}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rise,.js .rise{transform:none;opacity:1}.js .lead{clip-path:none;transform:none}.hero-title .line-in{transform:none}.zeichen path{stroke-dashoffset:0}.js .foto.rise img{transform:none}}
 </style>
 
 </head>
@@ -236,7 +289,7 @@
 <div id="progress"></div>
 
 <nav>
-  <a class="mark" href="#top">Amana</a>
+  <a class="mark" href="#top"><svg class="zeichen" viewBox="-50 -50 100 100" aria-hidden="true"><path pathLength="1" d="M0 -44 L25.86 -35.6 L41.85 -13.6 L41.85 13.6 L25.86 35.6 L0 44 L-25.86 35.6 L-41.85 13.6 L-41.85 -13.6 L-25.86 -35.6 Z"/><path pathLength="1" d="M0 -44 L41.85 -13.6 L25.86 35.6 L-25.86 35.6 L-41.85 -13.6 Z"/><path pathLength="1" d="M0 0 L0 -44 M0 0 L41.85 -13.6 M0 0 L25.86 35.6 M0 0 L-25.86 35.6 M0 0 L-41.85 -13.6"/></svg>Amana</a>
   <ul>
     <li><a class="nl" href="#bekommen">Karten</a></li>
     <li><a class="nl" href="#leistungen">Pflege</a></li>
@@ -262,7 +315,9 @@
   </div>
 
   <figure class="hero-bild">
+    <div class="schweben"><div class="kippen">
     <img src="./bilder/karte-1536.webp" srcset="./bilder/karte-800.webp 800w, ./bilder/karte-1536.webp 1536w" sizes="(max-width:720px) 150vw, min(100vw, 125vh, 1180px)" width="1536" height="1024" alt="Schwarze NFC-Karte mit weißem Kristall-Zeichen, aufgestellt auf einer spiegelnden Fläche" fetchpriority="high">
+    </div></div>
   </figure>
 
   <p class="hud hud-bl" aria-hidden="true">Eine Ansprechpartnerin<br>Von den Daten bis zur fertigen Karte</p>
@@ -274,7 +329,7 @@
 
   <section class="band" id="bekommen">
     <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">01 / Karten</span></div>
+      <div class="sec-head"><span class="eyebrow" data-scramble>01 / Karten</span></div>
       <p class="lead">Zwei Karten, ein System</p>
 
       <div class="grid4" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
@@ -360,7 +415,7 @@
 
   <section class="band" id="leistungen">
     <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">02 / Pflege</span></div>
+      <div class="sec-head"><span class="eyebrow" data-scramble>02 / Pflege</span></div>
       <p class="lead">Ihre Karte veraltet nicht</p>
 
       <div class="services">
@@ -378,7 +433,7 @@
 
   <section class="band" id="arbeitsprobe">
     <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">03 / Arbeitsprobe</span></div>
+      <div class="sec-head"><span class="eyebrow" data-scramble>03 / Arbeitsprobe</span></div>
       <div class="probe">
         <div>
           <p class="lead">Probieren Sie es am Handy</p>
@@ -397,7 +452,7 @@
 
   <section class="band" id="qualitaet">
     <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">04 / Qualität</span></div>
+      <div class="sec-head"><span class="eyebrow" data-scramble>04 / Qualität</span></div>
       <p class="lead">Prüfen Sie es selbst nach</p>
 
       <figure class="foto foto-breit rise">
@@ -415,7 +470,7 @@
 
   <section class="band" id="prozess">
     <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">05 / Prozess</span></div>
+      <div class="sec-head"><span class="eyebrow" data-scramble>05 / Prozess</span></div>
       <p class="lead">Vier Schritte bis zur fertigen Karte</p>
       <p class="intro-text">Von der ersten Nachricht bis zur Karte in Ihrer Hand vergehen in der Regel wenige Tage.</p>
 
@@ -430,7 +485,7 @@
 
   <section class="band" id="name">
     <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">06 / Der Name</span></div>
+      <div class="sec-head"><span class="eyebrow" data-scramble>06 / Der Name</span></div>
       <div class="name-grid">
         <div>
           <p class="arabic">أمانة</p>
@@ -447,7 +502,9 @@
 
   <section class="band cta-band" id="kontakt">
     <div class="wrap">
-      <div class="sec-head"><span class="eyebrow">Kontakt</span></div>
+      <div class="schein" aria-hidden="true"></div>
+      <svg class="zeichen gross" viewBox="-50 -50 100 100" aria-hidden="true"><path pathLength="1" d="M0 -44 L25.86 -35.6 L41.85 -13.6 L41.85 13.6 L25.86 35.6 L0 44 L-25.86 35.6 L-41.85 13.6 L-41.85 -13.6 L-25.86 -35.6 Z"/><path pathLength="1" d="M0 -44 L41.85 -13.6 L25.86 35.6 L-25.86 35.6 L-41.85 -13.6 Z"/><path pathLength="1" d="M0 0 L0 -44 M0 0 L41.85 -13.6 M0 0 L25.86 35.6 M0 0 L-25.86 35.6 M0 0 L-41.85 -13.6"/></svg>
+      <div class="sec-head"><span class="eyebrow" data-scramble>Kontakt</span></div>
       <h2>Sehen Sie es sich<br>am Handy an</h2>
       <p class="intro-text" style="margin-bottom:32px">Öffnen Sie oben die Beispielkarte mit dem Telefon — das ist genau das, was Ihre Kunden sehen. Wenn es passt, schreiben Sie mir, welche Karte Sie brauchen. Sie gehen damit keine Verpflichtung ein.</p>
       <a class="btn btn-solid" href="mailto:kira.moewes@gmail.com?subject=Karte%20anfragen"><span>Karte anfragen</span><span aria-hidden="true">→</span></a>
@@ -485,8 +542,33 @@
 
   if (reduce) return;
 
-  /* Scramble auf dem Eyebrow */
-  document.querySelectorAll('[data-scramble]').forEach(function(el){
+  /* Zeichen in der Leiste zeichnet sich beim Laden */
+  var navZeichen = document.querySelector('nav .zeichen');
+  if (navZeichen) setTimeout(function(){ navZeichen.classList.add('gezeichnet'); }, 300);
+
+  /* Karte im Hero neigt sich leicht zur Maus (nur mit Maus, nicht am Handy) */
+  var kippen = document.querySelector('.hero-bild .kippen');
+  if (kippen && matchMedia('(hover: hover) and (pointer: fine)').matches){
+    var wartet = false, mx = 0, my = 0;
+    addEventListener('pointermove', function(e){
+      mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5;
+      if (wartet) return; wartet = true;
+      requestAnimationFrame(function(){
+        kippen.style.setProperty('--rx', (mx * 7).toFixed(2) + 'deg');
+        kippen.style.setProperty('--ry', (-my * 5).toFixed(2) + 'deg');
+        wartet = false;
+      });
+    }, {passive:true});
+  }
+
+  /* Geschwister im selben Raster erscheinen nacheinander */
+  document.querySelectorAll('.rise').forEach(function(el){
+    var i = Array.prototype.indexOf.call(el.parentNode.children, el);
+    el.style.setProperty('--d', Math.min(i, 5) * 0.09 + 's');
+  });
+
+  /* Scramble: Text entschluesselt sich, sobald er ins Bild kommt */
+  function scramble(el){
     var target = el.textContent, chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·', frame = 0;
     var id = setInterval(function(){
       frame++;
@@ -496,13 +578,20 @@
       }).join('');
       if (frame - 4 > target.length){ clearInterval(id); el.textContent = target; }
     }, 34);
-  });
+  }
 
   /* Eintreten beim Scrollen */
   var io = new IntersectionObserver(function(es){
-    es.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('seen'); io.unobserve(en.target); } });
+    es.forEach(function(en){
+      if (!en.isIntersecting) return;
+      var el = en.target;
+      if (el.hasAttribute('data-scramble')) scramble(el);
+      else if (el.classList.contains('zeichen')) el.classList.add('gezeichnet');
+      else el.classList.add('seen');
+      io.unobserve(el);
+    });
   }, {rootMargin:'0px 0px -8% 0px'});
-  document.querySelectorAll('.rise').forEach(function(el){ io.observe(el); });
+  document.querySelectorAll('.rise, .lead, [data-scramble], .zeichen.gross').forEach(function(el){ io.observe(el); });
 
 })();
 </script>
