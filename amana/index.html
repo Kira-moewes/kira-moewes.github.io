@@ -6,7 +6,7 @@
 <title>Amana — Digitale Visitenkarten und Bewertungskarten</title>
 <meta name="description" content="NFC-Karten mit eigener Seite: Scan, Click, Connect — Kontakt speichern oder bewerten.">
 <meta name="robots" content="noindex,nofollow">
-<link rel="stylesheet" href="../assets/fonts/amana.css?v=20261021-0914">
+<link rel="stylesheet" href="../assets/fonts/amana.css?v=20261022-0921">
 <style>
   :root{
     /* Farben der Karte: Schwarz, Graphit und Silber. Die Rollen heissen wie
@@ -57,9 +57,6 @@
   /* Unterkante laeuft weich in den Seitengrund ueber */
   .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:120px;z-index:3;pointer-events:none;background:linear-gradient(180deg,rgba(5,5,5,0),var(--void))}
 
-  .hud{position:absolute;z-index:4;font-family:var(--mono);font-size:10px;line-height:1.7;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0}
-  .hud-bl{bottom:22px;left:var(--pad)}
-  .hud-br{bottom:22px;right:var(--pad);text-align:right}
 
   .hero .wrap{position:relative;z-index:5;text-align:center;padding-top:calc(var(--nav-h) + clamp(2rem,6vh,4.5rem))}
 
@@ -320,8 +317,6 @@
     </div></div>
   </figure>
 
-  <p class="hud hud-bl" aria-hidden="true">Eine Ansprechpartnerin<br>Von den Daten bis zur fertigen Karte</p>
-  <p class="hud hud-br" aria-hidden="true">Index 00 / 06<br>© 2026</p>
   <div class="hero-grain"></div>
 </header>
 
