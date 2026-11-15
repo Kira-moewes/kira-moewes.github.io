@@ -1,0 +1,280 @@
+/* Inter – lokal ausgeliefert (SIL Open Font License 1.1).
+   Keine Verbindung zu Google-Servern, daher keine Datenuebertragung an Dritte. */
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url(../fonts/inter-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url(../fonts/inter-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(../fonts/inter-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url(../fonts/inter-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../fonts/inter-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../fonts/inter-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(../fonts/inter-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(../fonts/inter-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* =============================================================
+   Digitale Visitenkarte – ruhiges, gedrucktes Dune
+   Haarlinien statt Kacheln, eine Akzentfarbe, kein Leuchten.
+   ============================================================= */
+:root{
+  --black:#0B0908;
+  --deep:#141010;
+  --sand:#EFE6DA;
+  --sand-dim:#9B8B7A;
+  --ember:#C45B25;
+  --ember-hi:#E08A4C;
+  --pad:26px;
+  --r:3px;
+
+  --ember-lo:#8E4118;
+  --ember-lo:color-mix(in srgb, var(--ember) 72%, #000);
+  --line:rgba(239,230,218,.13);
+  --line-strong:rgba(239,230,218,.26);
+  --glass:transparent;
+
+  --dune-a:#3E2413;  --dune-a:color-mix(in srgb, var(--ember) 34%, #150F0B);
+  --dune-b:#1B120B;  --dune-b:color-mix(in srgb, var(--ember) 12%, #100C09);
+  --dune-c:#2A1A0F;  --dune-c:color-mix(in srgb, var(--ember) 20%, #120D0A);
+  --dune-d:#130D08;  --dune-d:color-mix(in srgb, var(--ember) 8%, #0D0A08);
+  --dune-e:#150E09;  --dune-e:color-mix(in srgb, var(--ember) 10%, #0B0908);
+  --dune-f:#0B0908;  --dune-f:var(--black);
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  min-height:100dvh;
+  background:var(--black);
+  color:var(--sand);
+  font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ---------- Kulisse: ein stiller Horizont, kein Wallpaper ---------- */
+.scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.sun{
+  position:absolute;left:50%;bottom:-14vh;width:min(150vw,820px);aspect-ratio:1;
+  transform:translateX(-50%);
+  background:radial-gradient(circle at 50% 50%,
+    color-mix(in srgb,var(--ember-hi) 10%,transparent) 0%,
+    color-mix(in srgb,var(--ember) 6%,transparent) 34%,
+    transparent 66%);
+}
+.haze{
+  position:absolute;inset:auto 0 0 0;height:56vh;
+  background:linear-gradient(to top,color-mix(in srgb,var(--ember) 5%,transparent),transparent 72%);
+}
+.dunes{position:absolute;inset:0;width:100%;height:100%;opacity:.8}
+.crest{opacity:.42}
+.disc{opacity:.55}
+.grain{
+  position:absolute;inset:0;opacity:.08;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(120% 75% at 50% 18%,transparent 38%,rgba(0,0,0,.62) 100%);
+}
+
+/* ---------- Markenband: dieser Teil der Seite ist komplett schwarz ---------- */
+.brandbar{
+  position:relative;z-index:3;
+  background:#000;
+  padding:calc(env(safe-area-inset-top,0px) + 52px) var(--pad) 44px;
+  display:flex;justify-content:center;
+}
+.brandbar::after{
+  content:"";position:absolute;left:0;right:0;bottom:-48px;height:48px;pointer-events:none;
+  background:linear-gradient(#000,transparent);
+}
+.brandmark{width:clamp(64px,19vw,84px);height:auto;display:block}
+
+/* ---------- Karte ---------- */
+.card{
+  position:relative;z-index:2;
+  width:min(100%,480px);
+  margin:0 auto;
+  padding:40px var(--pad) calc(env(safe-area-inset-bottom,0px) + 64px);
+  animation:rise .5s ease both;
+}
+@keyframes rise{from{opacity:0}to{opacity:1}}
+
+/* ---------- Kopf ---------- */
+.hero{text-align:center}
+.photo{
+  width:92px;height:92px;border-radius:50%;object-fit:cover;
+  margin:0 auto 24px;display:block;
+  filter:grayscale(.25) contrast(1.05);
+}
+h1{
+  margin:0;
+  font-size:clamp(1.5rem,6.4vw,2rem);
+  font-weight:200;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--sand);
+  line-height:1.25;
+}
+.role{
+  margin:12px 0 0;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--sand-dim);font-weight:400;
+}
+.bio{
+  margin:22px auto 0;font-size:.94rem;color:rgba(239,230,218,.72);
+  max-width:36ch;
+}
+
+/* ---------- Bewertungskarte ---------- */
+.sterne{display:flex;justify-content:center;gap:7px;margin:20px 0 0}
+.stern{width:19px;height:19px;fill:var(--ember);stroke:none}
+.frage{
+  margin:20px 0 0;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--sand-dim);font-weight:400;
+}
+.weitere{list-style:none;margin:26px 0 0;padding:0;border-top:1px solid var(--line)}
+.hinweis{margin:16px 0 0;font-size:.82rem;color:var(--sand-dim);text-align:center}
+
+/* ---------- Aktionen ---------- */
+.actions{margin:38px 0 0;padding-top:30px;border-top:1px solid var(--line-strong)}
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:16px 18px;border-radius:var(--r);
+  font:inherit;font-size:.78rem;font-weight:400;letter-spacing:.2em;text-transform:uppercase;
+  cursor:pointer;border:1px solid transparent;background:none;text-decoration:none;
+  transition:background .2s ease,color .2s ease,border-color .2s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.i{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn-primary{background:var(--ember);color:#100A06;font-weight:500}
+.btn-primary:hover{background:var(--ember-hi)}
+.btn-ghost{border-color:var(--line-strong);color:var(--sand)}
+.btn-ghost:hover{border-color:var(--sand-dim);background:rgba(239,230,218,.04)}
+
+
+/* ---------- Linkgruppen ---------- */
+.groups{margin-top:44px;display:grid;gap:34px}
+.group h2{
+  margin:0 0 4px;font-size:.62rem;font-weight:400;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--sand-dim);
+}
+.group ul{list-style:none;margin:0;padding:0}
+.link{
+  display:flex;align-items:center;gap:15px;
+  padding:17px 2px;text-decoration:none;color:var(--sand);
+  border-bottom:1px solid var(--line);
+  transition:color .2s ease,padding-left .2s ease;
+}
+.group li:first-child .link{border-top:1px solid var(--line)}
+.link:hover{color:var(--ember-hi);padding-left:6px}
+.link .i{color:var(--ember);width:17px;height:17px}
+.link-text{flex:1;min-width:0}
+.link-label{display:block;font-size:.95rem}
+.link-sub{display:block;font-size:.74rem;color:var(--sand-dim);margin-top:1px}
+.chev{width:13px;height:13px;opacity:.35;flex:none;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- Teilen / Fuss ---------- */
+.share{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:46px}
+.foot{margin-top:52px;padding-top:24px;border-top:1px solid var(--line);text-align:left}
+.foot nav{display:flex;gap:22px;flex-wrap:wrap}
+.foot a{color:var(--sand-dim);font-size:.72rem;letter-spacing:.1em;text-decoration:none}
+.foot a:hover{color:var(--ember-hi)}
+.sig{margin:22px 0 0;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(155,139,122,.45)}
+.sig a{display:inline-flex;align-items:center;gap:.7em;padding:.72em 1.1em;
+  border:1px solid var(--line);border-radius:999px;
+  color:var(--sand-dim);font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;
+  transition:color .25s ease,border-color .25s ease,background-color .25s ease}
+.sig a::after{content:"\2192";font-size:.8rem;letter-spacing:0;opacity:.7}
+.sig a:hover,.sig a:focus-visible{color:var(--ember-hi);border-color:var(--ember);background:rgba(196,91,37,.08)}
+.sig a:hover::after,.sig a:focus-visible::after{opacity:1}
+
+/* ---------- QR ---------- */
+.qr{
+  border:1px solid var(--line-strong);border-radius:var(--r);padding:26px;
+  background:#0B0908;color:var(--sand);
+  max-width:min(92vw,330px);text-align:center;
+}
+.qr::backdrop{background:rgba(0,0,0,.86)}
+.qr-box{background:var(--sand);padding:14px;display:grid;place-items:center}
+.qr-box img,.qr-box canvas,.qr-box table{width:100%;height:auto;display:block;image-rendering:pixelated}
+.qr-url{font-size:.72rem;color:var(--sand-dim);word-break:break-all;margin:14px 0 16px}
+
+/* ---------- Hinweis ---------- */
+.toast{
+  position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);
+  transform:translate(-50%,12px);z-index:40;
+  padding:11px 20px;border-radius:var(--r);
+  background:#000;border:1px solid var(--line-strong);color:var(--sand);
+  font-size:.76rem;letter-spacing:.06em;
+  opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
