@@ -48,14 +48,14 @@ window.PROJEKTE = [
   },
 
   {
-    titel:   "Planvoller GmbH",
+    titel:   "Lindholm Hausbau",
     bereich: "Websites",
     gruppe:  "Schwerpunkt Gestaltung",
     art:     "Website",
     jahr:    "2026",
-    satz:    "Hausbau im Rheinland",
+    satz:    "Massivhäuser mit Festpreis",
     label:   "",
-    ziel:    "https://planvoller.vercel.app/"
+    ziel:    "https://lindholm-hausbau.vercel.app/"
   },
 
   {
