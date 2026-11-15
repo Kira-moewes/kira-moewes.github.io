@@ -43,7 +43,7 @@ window.PROJEKTE = [
     art:     "Website",
     jahr:    "2026",
     satz:    "Erwachsenwerden, aber machbar",
-    label:   "Demo-Unternehmen",
+    label:   "",
     ziel:    "https://startklar-six.vercel.app/"
   },
 
@@ -54,7 +54,7 @@ window.PROJEKTE = [
     art:     "Website",
     jahr:    "2026",
     satz:    "Hausbau im Rheinland",
-    label:   "Entwurf",
+    label:   "",
     ziel:    "https://planvoller.vercel.app/"
   },
 
@@ -65,7 +65,7 @@ window.PROJEKTE = [
     art:     "Website",
     jahr:    "2026",
     satz:    "Digitale Transformation",
-    label:   "Entwurf",
+    label:   "",
     ziel:    "https://kira-moewes.github.io/klarfeld-beratung/"
   },
 
@@ -76,7 +76,7 @@ window.PROJEKTE = [
     art:     "Website",
     jahr:    "2026",
     satz:    "Thailändische Küche",
-    label:   "Entwurf",
+    label:   "",
     ziel:    "https://kira-moewes.github.io/thai-imbiss-nam-fon/"
   },
 
@@ -88,7 +88,7 @@ window.PROJEKTE = [
     art:     "Website",
     jahr:    "2026",
     satz:    "Elektrotechnik, Notdienst",
-    label:   "Entwurf",
+    label:   "",
     ziel:    "https://kira-moewes.github.io/elektro-neuenfeld/"
   },
 
@@ -99,7 +99,7 @@ window.PROJEKTE = [
     art:     "Marke",
     jahr:    "2026",
     satz:    "Erfundene Marke",
-    label:   "Demo-Unternehmen",
+    label:   "",
     ziel:    "https://kira-moewes.github.io/webgewerk-agenten/"
   }
 
