@@ -3,6 +3,7 @@
 | Ordner | Inhalt | Adresse |
 |---|---|---|
 | `portfolio/` | Portfolio mit allen Website-Arbeiten | https://kira-moewes.github.io/portfolio/ |
+| `kernig/` | KERNIG Nussmus: Demo-Shop mit 3D-Glas-Karussell (Quelle: Repo Schule-, Ordner glas-shop) | https://kira-moewes.github.io/kernig/ |
 | `k/` | Digitale Visitenkarten für NFC-Karten und QR-Codes | z. B. https://kira-moewes.github.io/k/kira/ |
 | `assets/` | Gemeinsame Bauteile: Schriften, Design, Logo und die Technik der Visitenkarten | keine eigene Seite |
 

@@ -37,6 +37,17 @@ window.PROJEKTE = [
 
   /* ------------------------------------------------- Schwerpunkt Gestaltung */
   {
+    titel:   "KERNIG Nussmus",
+    bereich: "Websites",
+    gruppe:  "Schwerpunkt Gestaltung",
+    art:     "Shop",
+    jahr:    "2026",
+    satz:    "Nussmus-Shop, 3D-Gläser",
+    label:   "Demo-Unternehmen",
+    ziel:    "https://kira-moewes.github.io/kernig/"
+  },
+
+  {
     titel:   "Startklar",
     bereich: "Websites",
     gruppe:  "Schwerpunkt Gestaltung",
