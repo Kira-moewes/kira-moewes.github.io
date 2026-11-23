@@ -31,5 +31,11 @@ window.CARD = {
           url: "../../portfolio/" }
       ]
     }
+  ],
+
+  /* Rechtliches – gilt für die ganze Seite kira-moewes.github.io */
+  footer: [
+    { label: "Impressum",   url: "../../impressum/" },
+    { label: "Datenschutz", url: "../../datenschutz/" }
   ]
 };
